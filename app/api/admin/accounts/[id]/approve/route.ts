@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function POST(req: NextRequest, context: any) {
+  const { id } = await context.params;
 
   return NextResponse.json({
     success: true,
-    message: `Approved account ${id}`
+    message: `Approved account ${id}`,
   });
 }
