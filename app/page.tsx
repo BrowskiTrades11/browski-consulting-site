@@ -510,6 +510,57 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
                 <p className="lede" style={{ fontSize: 17, marginTop: 12 }}>
                   Designed for traders who want a structured, consistency-focused automated solution with guided onboarding and licensed activation.
                 </p>
+                <div className="card" style={{ marginTop: 26 }}>
+  <h3 style={{ fontSize: 28 }}>Onboarding Guide</h3>
+
+  <p className="lede" style={{ fontSize: 16, marginTop: 12 }}>
+    Follow these steps to activate your Money Print ORB system.
+  </p>
+
+  <div className="grid-2" style={{ marginTop: 22 }}>
+    <div className="card-tight">
+      <strong>Step 1: Create Tradeify Account</strong>
+      <p className="small" style={{ marginTop: 8 }}>
+        Create your funded trading account through Tradeify or the approved provider.
+      </p>
+    </div>
+
+    <div className="card-tight">
+      <strong>Step 2: Create NinjaTrader Account</strong>
+      <p className="small" style={{ marginTop: 8 }}>
+        Create a free NinjaTrader account so the system can be connected properly.
+      </p>
+    </div>
+
+    <div className="card-tight">
+      <strong>Step 3: Install NinjaTrader</strong>
+      <p className="small" style={{ marginTop: 8 }}>
+        Download and install NinjaTrader using the setup tutorial provided after signup.
+      </p>
+    </div>
+
+    <div className="card-tight">
+      <strong>Step 4: Connect Your Account</strong>
+      <p className="small" style={{ marginTop: 8 }}>
+        Follow the tutorial to connect your funded account to NinjaTrader.
+      </p>
+    </div>
+
+    <div className="card-tight">
+      <strong>Step 5: Submit Tradeify ID</strong>
+      <p className="small" style={{ marginTop: 8 }}>
+        Enter your Tradeify account ID below so your activation can be reviewed.
+      </p>
+    </div>
+
+    <div className="card-tight">
+      <strong>Step 6: Wait for Approval</strong>
+      <p className="small" style={{ marginTop: 8 }}>
+        Once reviewed, your license key and activation status will appear in your dashboard.
+      </p>
+    </div>
+  </div>
+</div>
                 <div className="grid-2" style={{ marginTop: 26 }}>
                   <div className="card-tight">$499 monthly subscription</div>
                   <div className="card-tight">No profit split</div>
