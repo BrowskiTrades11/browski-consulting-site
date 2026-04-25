@@ -561,6 +561,44 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
     </div>
   </div>
 </div>
+                <div className="card" style={{ marginTop: 26 }}>
+  <h3 style={{ fontSize: 28 }}>Onboarding Guide</h3>
+
+  <p className="lede" style={{ marginTop: 12 }}>
+    Complete these steps to activate your system.
+  </p>
+
+  <ul style={{ marginTop: 20, lineHeight: 2 }}>
+    <li>
+      <input type="checkbox" checked={onboarding.tradeifyCreated} onChange={() =>
+        setOnboarding(p => ({ ...p, tradeifyCreated: !p.tradeifyCreated }))
+      } /> Create Tradeify account
+    </li>
+
+    <li>
+      <input type="checkbox" checked={onboarding.ninjaCreated} onChange={() =>
+        setOnboarding(p => ({ ...p, ninjaCreated: !p.ninjaCreated }))
+      } /> Create NinjaTrader account
+    </li>
+
+    <li>
+      <input type="checkbox" checked={onboarding.ninjaInstalled} onChange={() =>
+        setOnboarding(p => ({ ...p, ninjaInstalled: !p.ninjaInstalled }))
+      } /> Install NinjaTrader
+    </li>
+
+    <li>
+      <input type="checkbox" checked={onboarding.accountConnected} onChange={() =>
+        setOnboarding(p => ({ ...p, accountConnected: !p.accountConnected }))
+      } /> Connect your account
+    </li>
+
+    <li>
+      <input type="checkbox" checked={onboarding.submitted} readOnly />
+      Submit Tradeify account ID
+    </li>
+  </ul>
+</div>
                 <div className="grid-2" style={{ marginTop: 26 }}>
                   <div className="card-tight">$499 monthly subscription</div>
                   <div className="card-tight">No profit split</div>
