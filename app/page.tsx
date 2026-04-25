@@ -111,12 +111,32 @@ export default function BrowskiConsultingApp() {
     return token ? { Authorization: `Bearer ${token}` } : {};
   }, [token]);
 
-  async function loadAdminAccounts() {
-    const data = await safeApiFetch("/admin/accounts/pending", {
-      method: "GET",
-      headers: authHeaders,
-    });
+ async function loadAdminAccounts() {
+  try {
+    const res = await fetch("/api/admin/accounts");
+    const data = await res.json();
 
+    if (data?.error) {
+      setAdminMessage(`Admin load error: ${data.error}`);
+      return;
+    }
+
+    setAdminAccounts(
+      data.map((acct: any) => ({
+        id: acct.id,
+        fullName: acct.full_name || acct.fullName || "Customer",
+        email: acct.email || "No email saved",
+        propAccountId: acct.prop_account_id,
+        submittedAt: acct.created_at,
+        approvalStatus: acct.approval_status,
+        licenseKey: acct.license_key,
+        notes: acct.notes || "",
+      }))
+    );
+  } catch (err) {
+    setAdminMessage("Failed to load admin accounts.");
+  }
+}
     if (data?.__error) {
       setAdminMessage(`Preview mode: ${data.__error}`);
       return;
@@ -265,7 +285,7 @@ export default function BrowskiConsultingApp() {
     return (
       <AdminDashboardPage
         user={user}
-        accounts={adminAccounts.length ? adminAccounts : mockPendingAccounts}
+        accounts={adminAccounts}
         message={adminMessage}
         onRefresh={loadAdminAccounts}
         onBack={() => setPage("dashboard")}
