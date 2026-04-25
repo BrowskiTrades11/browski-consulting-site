@@ -533,8 +533,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
               </div>
             </div>
           </div>
-        </div>
-      </section>
+       </section>
 
       <section className="section">
         <div className="container">
