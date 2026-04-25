@@ -93,6 +93,19 @@ export default function BrowskiConsultingApp() {
   });
   const [adminAccounts, setAdminAccounts] = useState<Account[]>([]);
   const [adminMessage, setAdminMessage] = useState("");
+  //
+  useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+
+  if (params.get("checkout") === "success") {
+    setDashboardState((prev) => ({
+      ...prev,
+      subscriptionStatus: "Active subscription",
+    }));
+
+    setPage("dashboard");
+  }
+}, []);
 
   const authHeaders = useMemo(() => {
     return token ? { Authorization: `Bearer ${token}` } : {};
