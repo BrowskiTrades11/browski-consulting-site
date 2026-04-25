@@ -510,7 +510,6 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
                 <p className="lede" style={{ fontSize: 17, marginTop: 12 }}>
                   Designed for traders who want a structured, consistency-focused automated solution with guided onboarding and licensed activation.
                 </p>
-                <div className="card" style={{ marginTop: 26 }}>
  
                 <div className="grid-2" style={{ marginTop: 26 }}>
                   <div className="card-tight">$499 monthly subscription</div>
