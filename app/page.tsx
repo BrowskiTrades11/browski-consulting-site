@@ -240,7 +240,7 @@ export default function BrowskiConsultingApp() {
       tradeifyAccountId: data.account.propAccountId,
       approvalStatus: data.account.approvalStatus,
     }));
-  }
+
 
   async function handleCheckout() {
     const data = await apiFetch("/billing/create-checkout-session", {
