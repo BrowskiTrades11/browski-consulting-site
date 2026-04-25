@@ -841,7 +841,7 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
           <div className="card">
             <h3 style={{ fontSize: 28 }}>Start Subscription</h3>
             <p className="lede" style={{ fontSize: 16, marginTop: 12 }}>
-              Begin Stripe checkout for Money Print ORB at $499/month.
+              Begin access to the Money Print ORB system ($499/month). Requires a funded trading account (~$120/month, paid directly to the provider) and a NinjaTrader account. Step-by-step setup guide provided after signup.
             </p>
             <button onClick={onCheckout} className="btn btn-accent" style={{ marginTop: 20 }}>
               Open Checkout
