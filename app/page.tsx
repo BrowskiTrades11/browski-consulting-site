@@ -849,6 +849,18 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [onboarding, setOnboarding] = useState({
+  tradeifyCreated: false,
+  ninjaCreated: false,
+  ninjaInstalled: false,
+  accountConnected: false,
+  submitted: false,
+});
+  useEffect(() => {
+  if (dashboardState.tradeifyAccountId) {
+    setOnboarding((prev) => ({ ...prev, submitted: true }));
+  }
+}, [dashboardState.tradeifyAccountId]);
 
   async function submitAccount(e: React.FormEvent) {
     e.preventDefault();
