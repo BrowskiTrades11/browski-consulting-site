@@ -493,47 +493,61 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
         </div>
       </section>
 
-      <section id="pricing" className="section" style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", background: "rgba(255,255,255,0.03)" }}>
-        <div className="container">
-          <div className="center">
-            <div className="eyebrow-secondary">Pricing</div>
-            <h2>Money Print ORB membership</h2>
-            <p className="lede" style={{ marginInline: "auto" }}>
-              A flat subscription with no performance fee, no profit split, and a clear activation process.
-            </p>
-          </div>
+      <section
+  id="pricing"
+  className="section"
+  style={{
+    borderTop: "1px solid var(--border)",
+    borderBottom: "1px solid var(--border)",
+    background: "rgba(255,255,255,0.03)",
+  }}
+>
+  <div className="container">
+    <div className="center">
+      <div className="eyebrow-secondary">Pricing</div>
+      <h2>Money Print ORB membership</h2>
+      <p className="lede" style={{ marginInline: "auto" }}>
+        A flat subscription with no performance fee, no profit split, and a clear activation process.
+      </p>
+    </div>
 
-          <div className="card" style={{ marginTop: 34 }}>
-            <div className="split split-2">
-              <div>
-                <h3 style={{ fontSize: 34 }}>Money Print ORB</h3>
-                <p className="lede" style={{ fontSize: 17, marginTop: 12 }}>
-                  Designed for traders who want a structured, consistency-focused automated solution with guided onboarding and licensed activation.
-                </p>
- 
-                <div className="grid-2" style={{ marginTop: 26 }}>
-                  <div className="card-tight">$499 monthly subscription</div>
-                  <div className="card-tight">No profit split</div>
-                  <div className="card-tight">Private dashboard access</div>
-                  <div className="card-tight">Tradeify account activation review</div>
-                </div>
-                  </div>   // closes the card
-             
-              <div className="cta-box">
-                <div style={{ fontSize: 14, color: ACCENT }}>Subscription price</div>
-                <div className="price" style={{ marginTop: 10 }}>$499</div>
-                <div className="muted">billed monthly</div>
-                <button onClick={() => setPage("signup")} className="btn full" style={{ marginTop: 20, background: "#fff", color: "#000" }}>
-                  Create Account
-                </button>
-                <p className="small" style={{ marginTop: 12 }}>
-                  Account creation comes first, followed by checkout and Tradeify account submission.
-                </p>
-              </div>
-            </div>
-          </div>
-       </section>
+    <div className="card" style={{ marginTop: 34 }}>
+      <div className="split split-2">
+        <div>
+          <h3 style={{ fontSize: 34 }}>Money Print ORB</h3>
+          <p className="lede" style={{ fontSize: 17, marginTop: 12 }}>
+            Designed for traders who want a structured, consistency-focused automated solution with guided onboarding and licensed activation.
+          </p>
 
+          <div className="grid-2" style={{ marginTop: 26 }}>
+            <div className="card-tight">$499 monthly subscription</div>
+            <div className="card-tight">No profit split</div>
+            <div className="card-tight">Private dashboard access</div>
+            <div className="card-tight">Tradeify account activation review</div>
+          </div>
+        </div>
+
+        <div className="cta-box">
+          <div style={{ fontSize: 14, color: ACCENT }}>Subscription price</div>
+          <div className="price" style={{ marginTop: 10 }}>$499</div>
+          <div className="muted">billed monthly</div>
+
+          <button
+            onClick={() => setPage("signup")}
+            className="btn full"
+            style={{ marginTop: 20, background: "#fff", color: "#000" }}
+          >
+            Create Account
+          </button>
+
+          <p className="small" style={{ marginTop: 12 }}>
+            Account creation comes first, followed by checkout and Tradeify account submission.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
       <section className="section">
         <div className="container">
           <div className="card">
