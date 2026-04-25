@@ -511,8 +511,6 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
                   Designed for traders who want a structured, consistency-focused automated solution with guided onboarding and licensed activation.
                 </p>
                 <div className="card" style={{ marginTop: 26 }}>
-  
-                <div className="card" style={{ marginTop: 26 }}>
  
                 <div className="grid-2" style={{ marginTop: 26 }}>
                   <div className="card-tight">$499 monthly subscription</div>
@@ -520,7 +518,8 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
                   <div className="card-tight">Private dashboard access</div>
                   <div className="card-tight">Tradeify account activation review</div>
                 </div>
-              </div>
+                  </div>   // closes the card
+             
               <div className="cta-box">
                 <div style={{ fontSize: 14, color: ACCENT }}>Subscription price</div>
                 <div className="price" style={{ marginTop: 10 }}>$499</div>
