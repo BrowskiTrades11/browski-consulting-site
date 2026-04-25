@@ -137,25 +137,7 @@ export default function BrowskiConsultingApp() {
     setAdminMessage("Failed to load admin accounts.");
   }
 }
-    if (data?.__error) {
-      setAdminMessage(`Preview mode: ${data.__error}`);
-      return;
-    }
-
-    const mapped: Account[] = (data.accounts || []).map((acct: any) => ({
-      id: acct.id,
-      fullName: acct.fullName || acct.user?.fullName || "Unknown User",
-      email: acct.email || acct.user?.email || "",
-      propAccountId: acct.propAccountId,
-      submittedAt: acct.submittedAt || acct.createdAt || "",
-      approvalStatus: acct.approvalStatus,
-      licenseKey: acct.licenseKey || null,
-      notes: acct.notes || acct.approvalNotes || "",
-    }));
-
-    setAdminAccounts(mapped);
-    setAdminMessage(mapped.length ? "Loaded admin accounts from backend." : "No pending accounts returned from backend.");
-  }
+  
 
   async function loadDashboardData(headersOverride = authHeaders) {
     const accountData = await safeApiFetch("/accounts/me", {
@@ -229,18 +211,18 @@ export default function BrowskiConsultingApp() {
   }
 
   async function handleTradeifySubmit(propAccountId: string) {
-    const data = await apiFetch("/accounts/submit", {
-      method: "POST",
-      headers: authHeaders,
-      body: JSON.stringify({ propAccountId }),
-    });
+  const data = await apiFetch("/accounts/submit", {
+    method: "POST",
+    headers: authHeaders,
+    body: JSON.stringify({ propAccountId }),
+  });
 
-    setDashboardState((prev) => ({
-      ...prev,
-      tradeifyAccountId: data.account.propAccountId,
-      approvalStatus: data.account.approvalStatus,
-    }));
-
+  setDashboardState((prev) => ({
+    ...prev,
+    tradeifyAccountId: data.account.propAccountId,
+    approvalStatus: data.account.approvalStatus,
+  }));
+}
 
   async function handleCheckout() {
     const data = await apiFetch("/billing/create-checkout-session", {
