@@ -426,7 +426,11 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
             <div className="button-row" style={{ marginTop: 28 }}>
               <button onClick={() => setPage("signup")} className="btn btn-accent">Get Started</button>
               <a href="#dashboard" className="btn btn-outline">See Member Access</a>
-              <button onClick={onOpenAdmin} className="btn btn-outline">Admin Preview</button>
+              {user?.isAdmin ? (
+  <button onClick={onOpenAdmin} className="btn btn-outline">
+    Admin Dashboard
+  </button>
+) : null}
             </div>
             <div className="grid-3" style={{ marginTop: 28 }}>
               <div className="card-tight"><div className="stat">$499</div><div className="muted">Monthly flat rate</div></div>

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(
@@ -6,10 +7,10 @@ export async function POST(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    requireAdmin(req);
+
     const { id } = await context.params;
     const body = await req.json().catch(() => ({}));
-
-    console.log("REJECT HIT:", id);
 
     if (!id) {
       return NextResponse.json({ error: "Missing account id" }, { status: 400 });
@@ -26,18 +27,14 @@ export async function POST(
       .single();
 
     if (error) {
-      console.error("REJECT ERROR:", error.message);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    console.log("REJECT SUCCESS:", data.id);
-
-    return NextResponse.json({
-      success: true,
-      account: data,
-    });
-  } catch (error: any) {
-    console.error("REJECT FAILED:", error?.message || error);
-    return NextResponse.json({ error: "Reject failed" }, { status: 500 });
+    return NextResponse.json({ success: true, account: data });
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: err?.message || "Reject failed" },
+      { status: 403 }
+    );
   }
 }

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
 function generateLicenseKey() {
@@ -11,10 +12,10 @@ export async function POST(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
+    requireAdmin(req);
+
     const { id } = await context.params;
     const body = await req.json().catch(() => ({}));
-
-    console.log("APPROVE HIT:", id);
 
     if (!id) {
       return NextResponse.json({ error: "Missing account id" }, { status: 400 });
@@ -34,18 +35,14 @@ export async function POST(
       .single();
 
     if (error) {
-      console.error("APPROVE ERROR:", error.message);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    console.log("APPROVE SUCCESS:", data.id);
-
-    return NextResponse.json({
-      success: true,
-      account: data,
-    });
-  } catch (error: any) {
-    console.error("APPROVE FAILED:", error?.message || error);
-    return NextResponse.json({ error: "Approval failed" }, { status: 500 });
+    return NextResponse.json({ success: true, account: data });
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: err?.message || "Approval failed" },
+      { status: 403 }
+    );
   }
 }
