@@ -113,7 +113,9 @@ export default function BrowskiConsultingApp() {
 
 async function loadAdminAccounts() {
   try {
-    const res = await fetch("/api/admin/accounts?status=all");
+    const res = await fetch("/api/admin/accounts?status=all", {
+  headers: authHeaders,
+});
     const data = await res.json();
 
     if (data?.error) {
