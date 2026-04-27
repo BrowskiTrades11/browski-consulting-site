@@ -122,7 +122,7 @@ export default function BrowskiConsultingApp() {
     }
 
     setAdminAccounts(
-      data.map((acct: any) => ({
+  (Array.isArray(data) ? data : []).map((acct: any) => ({
         id: acct.id,
         fullName: acct.full_name || acct.fullName || "Customer",
         email: acct.email || "No email saved",
