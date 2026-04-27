@@ -426,7 +426,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
             <div className="button-row" style={{ marginTop: 28 }}>
               <button onClick={() => setPage("signup")} className="btn btn-accent">Get Started</button>
               <a href="#dashboard" className="btn btn-outline">See Member Access</a>
-              {user?.isAdmin ? (
+              {onOpenAdmin ? (
   <button onClick={onOpenAdmin} className="btn btn-outline">
     Admin Dashboard
   </button>
