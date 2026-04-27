@@ -111,9 +111,9 @@ export default function BrowskiConsultingApp() {
     return token ? { Authorization: `Bearer ${token}` } : {};
   }, [token]);
 
- async function loadAdminAccounts() {
+async function loadAdminAccounts() {
   try {
-    const res = await fetch(`/api/admin/accounts?status=${filter}`);
+    const res = await fetch("/api/admin/accounts?status=all");
     const data = await res.json();
 
     if (data?.error) {
