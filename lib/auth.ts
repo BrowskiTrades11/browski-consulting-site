@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { getUserFromToken } from "@/lib/mock-db";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export function getBearerToken(req: NextRequest) {
   const header = req.headers.get("authorization");
@@ -7,19 +7,36 @@ export function getBearerToken(req: NextRequest) {
   return header.slice(7);
 }
 
-export function requireUser(req: NextRequest) {
+export async function requireUser(req: NextRequest) {
   const token = getBearerToken(req);
-  const user = getUserFromToken(token);
-  if (!user) {
+
+  if (!token) {
     throw new Error("Unauthorized");
   }
-  return user;
+
+  const { data, error } = await supabaseAdmin.auth.getUser(token);
+
+  if (error || !data?.user) {
+    throw new Error("Unauthorized");
+  }
+
+  return data.user;
 }
 
-export function requireAdmin(req: NextRequest) {
-  const user = requireUser(req);
-  if (!user.isAdmin) {
+export async function requireAdmin(req: NextRequest) {
+  const user = await requireUser(req);
+
+  const email = String(user.email || "").trim().toLowerCase();
+
+  const { data, error } = await supabaseAdmin
+    .from("admin_users")
+    .select("email")
+    .ilike("email", email)
+    .maybeSingle();
+
+  if (error || !data) {
     throw new Error("Forbidden");
   }
+
   return user;
 }
