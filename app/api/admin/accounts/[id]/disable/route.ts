@@ -7,7 +7,7 @@ export async function POST(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    requireAdmin(req);
+   await requireAdmin(req);
 
     const { id } = await context.params;
     const body = await req.json().catch(() => ({}));

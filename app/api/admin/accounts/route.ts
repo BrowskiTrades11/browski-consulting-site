@@ -4,7 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export async function GET(req: NextRequest) {
   try {
-    requireAdmin(req);
+   await requireAdmin(req);
 
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");
