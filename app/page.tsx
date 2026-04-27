@@ -140,20 +140,33 @@ async function loadAdminAccounts() {
   
 
   async function loadDashboardData(headersOverride = authHeaders) {
-    const accountData = await safeApiFetch("/accounts/me", {
-      method: "GET",
-      headers: headersOverride,
-    });
+  const accountData = await safeApiFetch("/accounts/me", {
+    method: "GET",
+    headers: headersOverride,
+  });
 
-    if (!accountData?.__error && Array.isArray(accountData.accounts) && accountData.accounts.length > 0) {
-      const account = accountData.accounts[0];
-      setDashboardState((prev) => ({
-        ...prev,
-        tradeifyAccountId: account.propAccountId || "",
-        approvalStatus: account.approvalStatus || prev.approvalStatus,
-        licenseKey: account.licenseKey || prev.licenseKey,
-      }));
-    }
+  const adminRes = await fetch("/api/admin/check", {
+    headers: headersOverride,
+  });
+
+  const adminData = await adminRes.json();
+
+  setUser((prev: any) => ({
+    ...prev,
+    isAdmin: adminData.isAdmin,
+  }));
+
+  if (!accountData?._error && Array.isArray(accountData.accounts) && accountData.accounts.length > 0) {
+    const account = accountData.accounts[0];
+
+    setDashboardState((prev) => ({
+      ...prev,
+      tradeifyAccountId: account.propAccountId || "",
+      approvalStatus: account.approvalStatus || prev.approvalStatus,
+      licenseKey: account.licenseKey || prev.licenseKey,
+    }));
+  }
+}
 
     const subscriptionData = await safeApiFetch("/billing/me", {
       method: "GET",
