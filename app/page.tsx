@@ -166,7 +166,7 @@ async function loadAdminAccounts() {
       licenseKey: account.licenseKey || prev.licenseKey,
     }));
   }
-}
+
 
     const subscriptionData = await safeApiFetch("/billing/me", {
       method: "GET",
