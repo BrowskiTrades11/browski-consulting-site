@@ -15,11 +15,14 @@ export async function POST(req: NextRequest) {
     const { data, error } = await supabaseAdmin
       .from("tradeify_accounts")
       .insert({
-        user_id: user.id,
-        prop_account_id: propAccountId,
-        approval_status: "pending",
-        license_key: null,
-      })
+  user_id: user.id,
+  email: user.email || null,
+  full_name: user.fullName || user.name || null,
+  prop_account_id: propAccountId,
+  approval_status: "pending",
+  license_key: null,
+  notes: "",
+})
       .select()
       .single();
 
