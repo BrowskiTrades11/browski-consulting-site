@@ -278,16 +278,10 @@ export default function BrowskiConsultingApp() {
             body: JSON.stringify({ notes }),
           });
 
-          if (data?.__error) {
-            setAdminMessage(`Preview mode: ${data.__error}. Showing local approval state.`);
-            const licenseKey = createMockLicenseKey();
-            setAdminAccounts((prev) =>
-              (prev.length ? prev : mockPendingAccounts).map((acct) =>
-                acct.id === id ? { ...acct, approvalStatus: "approved", licenseKey, notes: notes || acct.notes } : acct
-              )
-            );
-            return;
-          }
+         if (data?.error) {
+  setAdminMessage(`Admin approval error: ${data.error}`);
+  return;
+}
 
           setAdminMessage("Account approved successfully.");
           await loadAdminAccounts();
@@ -299,15 +293,10 @@ export default function BrowskiConsultingApp() {
             body: JSON.stringify({ notes }),
           });
 
-          if (data?.__error) {
-            setAdminMessage(`Preview mode: ${data.__error}. Showing local rejection state.`);
-            setAdminAccounts((prev) =>
-              (prev.length ? prev : mockPendingAccounts).map((acct) =>
-                acct.id === id ? { ...acct, approvalStatus: "rejected", notes: notes || acct.notes } : acct
-              )
-            );
-            return;
-          }
+         if (data?.error) {
+  setAdminMessage(`Admin reject error: ${data.error}`);
+  return;
+}
 
           setAdminMessage("Account rejected successfully.");
           await loadAdminAccounts();
@@ -319,16 +308,10 @@ export default function BrowskiConsultingApp() {
             body: JSON.stringify({ notes }),
           });
 
-          if (data?.__error) {
-            setAdminMessage(`Preview mode: ${data.__error}. Showing local disabled state.`);
-            setAdminAccounts((prev) =>
-              (prev.length ? prev : mockPendingAccounts).map((acct) =>
-                acct.id === id ? { ...acct, approvalStatus: "disabled", notes: notes || acct.notes } : acct
-              )
-            );
-            return;
-          }
-
+         if (data?.error) {
+  setAdminMessage(`Admin disable error: ${data.error}`);
+  return;
+}
           setAdminMessage("Account disabled successfully.");
           await loadAdminAccounts();
         }}
