@@ -183,7 +183,7 @@ async function loadAdminAccounts() {
     }
   }
 
-  async function handleRegister(form: { fullName: string; email: string; password: string }) {
+  async function handleRegister(form: { email: string; password: string }) {
     const data = await apiFetch("/auth/register", {
       method: "POST",
       body: JSON.stringify(form),
@@ -731,7 +731,6 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
 }
 
 function SignupPage({ onBack, onSubmit }: any) {
-  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -742,7 +741,7 @@ function SignupPage({ onBack, onSubmit }: any) {
     setError("");
     setLoading(true);
     try {
-      await onSubmit({ fullName, email, password });
+      await onSubmit({ email, password });
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -753,7 +752,6 @@ function SignupPage({ onBack, onSubmit }: any) {
   return (
     <AuthShell title="Create Account" onBack={onBack}>
       <form onSubmit={submit} className="form-stack">
-        <input placeholder="Full name" className="field" value={fullName} onChange={(e) => setFullName(e.target.value)} />
         <input placeholder="Email" className="field" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input placeholder="Password" type="password" className="field" value={password} onChange={(e) => setPassword(e.target.value)} />
         {error ? <p className="error">{error}</p> : null}

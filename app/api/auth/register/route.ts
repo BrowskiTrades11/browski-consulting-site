@@ -4,11 +4,10 @@ import { supabase } from "@/lib/supabase-client";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const fullName = String(body.fullName || "").trim();
   const email = String(body.email || "").trim().toLowerCase();
   const password = String(body.password || "").trim();
 
-  if (!fullName || !email || !password) {
+  if (!email || !password) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
   }
 
@@ -16,7 +15,6 @@ export async function POST(req: NextRequest) {
   const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
     email,
     password,
-    user_metadata: { full_name: fullName },
     email_confirm: true,
   });
 
@@ -45,7 +43,6 @@ export async function POST(req: NextRequest) {
     token: sessionData.session.access_token,
     user: {
       id: authData.user.id,
-      fullName,
       email,
       isAdmin: false,
     },
