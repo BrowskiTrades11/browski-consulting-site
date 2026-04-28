@@ -27,20 +27,8 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Insert profile row
-  const { error: profileError } = await supabaseAdmin.from("profiles").insert({
-    email,
-    role: "user",
-    active: false,
-  });
-
-  if (profileError) {
-    // Rollback auth user if profile creation fails
-    await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
-    return NextResponse.json({ error: profileError.message }, { status: 500 });
-  }
-
   // Sign in to get a real session token
+  // (Supabase trigger automatically creates the profiles row)
   const { data: sessionData, error: sessionError } = await supabase.auth.signInWithPassword({
     email,
     password,
