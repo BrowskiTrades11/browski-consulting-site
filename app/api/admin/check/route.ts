@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const user = await requireUser(req);
 
