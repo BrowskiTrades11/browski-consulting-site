@@ -1,24 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import { findUserByEmail } from "@/lib/mock-db";
+import { supabaseClient } from "@/lib/supabase-client";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const email = String(body.email || "").trim().toLowerCase();
-  const password = String(body.password || "").trim();
+  const password = String(body.password || "");
 
-  const user = findUserByEmail(email);
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-  if (!user || user.password !== password) {
-    return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+  if (error || !data.session || !data.user) {
+    return NextResponse.json(
+      { error: error?.message || "Invalid login" },
+      { status: 401 }
+    );
   }
 
   return NextResponse.json({
-    token: `mock-token-${user.email}`,
+    token: data.session.access_token,
     user: {
-      id: user.id,
-      fullName: user.fullName,
-      email: user.email,
-      isAdmin: user.isAdmin,
+      id: data.user.id,
+      email: data.user.email,
+      fullName: data.user.user_metadata?.full_name || "User",
     },
   });
 }

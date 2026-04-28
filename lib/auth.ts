@@ -16,7 +16,7 @@ export async function requireUser(req: NextRequest) {
 
   const { data, error } = await supabaseAdmin.auth.getUser(token);
 
-  if (error || !data?.user) {
+  if (error || !data.user) {
     throw new Error("Unauthorized");
   }
 
@@ -25,7 +25,6 @@ export async function requireUser(req: NextRequest) {
 
 export async function requireAdmin(req: NextRequest) {
   const user = await requireUser(req);
-
   const email = String(user.email || "").trim().toLowerCase();
 
   const { data, error } = await supabaseAdmin
