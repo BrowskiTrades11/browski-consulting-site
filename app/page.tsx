@@ -125,14 +125,14 @@ async function loadAdminAccounts() {
 
     setAdminAccounts(
   (Array.isArray(data) ? data : []).map((acct: any) => ({
-        id: acct.id,
-        fullName: acct.full_name || acct.fullName || "Customer",
+        id: acct.email,
+        fullName: acct.email || "Unknown",
         email: acct.email || "No email saved",
-        propAccountId: acct.prop_account_id,
+        propAccountId: acct.prop_account_id || "Not submitted",
         submittedAt: acct.created_at,
-        approvalStatus: acct.approval_status,
-        licenseKey: acct.license_key,
-        notes: acct.notes || "",
+        approvalStatus: acct.active ? "approved" : "pending",
+        licenseKey: null,
+        notes: "",
       }))
     );
   } catch (err) {
@@ -287,7 +287,7 @@ async function loadAdminAccounts() {
         onRefresh={loadAdminAccounts}
         onBack={() => setPage("dashboard")}
         onApprove={async (id: string, notes: string) => {
-          const data = await safeApiFetch(`/admin/accounts/${id}/approve`, {
+          const data = await safeApiFetch(`/admin/accounts/${encodeURIComponent(id)}/approve`, {
             method: "POST",
             headers: authHeaders,
             body: JSON.stringify({ notes }),
@@ -302,7 +302,7 @@ async function loadAdminAccounts() {
           await loadAdminAccounts();
         }}
         onReject={async (id: string, notes: string) => {
-          const data = await safeApiFetch(`/admin/accounts/${id}/reject`, {
+          const data = await safeApiFetch(`/admin/accounts/${encodeURIComponent(id)}/reject`, {
             method: "POST",
             headers: authHeaders,
             body: JSON.stringify({ notes }),
@@ -317,7 +317,7 @@ async function loadAdminAccounts() {
           await loadAdminAccounts();
         }}
         onDisable={async (id: string, notes: string) => {
-          const data = await safeApiFetch(`/admin/accounts/${id}/disable`, {
+          const data = await safeApiFetch(`/admin/accounts/${encodeURIComponent(id)}/disable`, {
             method: "POST",
             headers: authHeaders,
             body: JSON.stringify({ notes }),

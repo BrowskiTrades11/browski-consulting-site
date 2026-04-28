@@ -12,17 +12,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Tradeify account ID is required" }, { status: 400 });
     }
 
+    const email = String(user.email || "").toLowerCase();
+
     const { data, error } = await supabaseAdmin
-      .from("tradeify_accounts")
-      .insert({
-  user_id: user.id,
-  email: user.email || null,
-  full_name: user.user_metadata?.full_name || user.email || null,
-  prop_account_id: propAccountId,
-  approval_status: "pending",
-  license_key: null,
-  notes: "",
-})
+      .from("profiles")
+      .update({ prop_account_id: propAccountId })
+      .ilike("email", email)
       .select()
       .single();
 
@@ -32,10 +27,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       account: {
-        id: data.id,
         propAccountId: data.prop_account_id,
-        approvalStatus: data.approval_status,
-        licenseKey: data.license_key,
+        approvalStatus: data.active ? "approved" : "pending",
       },
     });
   } catch {

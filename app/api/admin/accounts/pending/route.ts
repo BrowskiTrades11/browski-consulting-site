@@ -6,19 +6,11 @@ export async function GET(req: NextRequest) {
   try {
     await requireAdmin(req);
 
-    const { searchParams } = new URL(req.url);
-    const status = searchParams.get("status");
-
-    let query = supabaseAdmin
-      .from("tradeify_accounts")
+    const { data, error } = await supabaseAdmin
+      .from("profiles")
       .select("*")
+      .eq("active", false)
       .order("created_at", { ascending: false });
-
-    if (status && status !== "all") {
-      query = query.eq("approval_status", status);
-    }
-
-    const { data, error } = await query;
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

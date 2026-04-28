@@ -2,35 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
-function generateLicenseKey() {
-  const part = () => Math.random().toString(36).substring(2, 6).toUpperCase();
-  return `BC-${part()}-${part()}-${part()}`;
-}
-
 export async function POST(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-   await requireAdmin(req);
+    await requireAdmin(req);
 
     const { id } = await context.params;
-    const body = await req.json().catch(() => ({}));
+    const email = decodeURIComponent(id);
 
-    if (!id) {
-      return NextResponse.json({ error: "Missing account id" }, { status: 400 });
+    if (!email) {
+      return NextResponse.json({ error: "Missing account identifier" }, { status: 400 });
     }
 
-    const licenseKey = generateLicenseKey();
-
     const { data, error } = await supabaseAdmin
-      .from("tradeify_accounts")
-      .update({
-        approval_status: "approved",
-        license_key: licenseKey,
-        notes: body.notes || "",
-      })
-      .eq("id", id)
+      .from("profiles")
+      .update({ active: true })
+      .ilike("email", email)
       .select("*")
       .single();
 

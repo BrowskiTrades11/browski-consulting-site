@@ -28,12 +28,12 @@ export async function requireAdmin(req: NextRequest) {
   const email = String(user.email || "").trim().toLowerCase();
 
   const { data, error } = await supabaseAdmin
-    .from("admin_users")
-    .select("email")
+    .from("profiles")
+    .select("role")
     .ilike("email", email)
     .maybeSingle();
 
-  if (error || !data) {
+  if (error || !data || data.role !== "admin") {
     throw new Error("Forbidden");
   }
 

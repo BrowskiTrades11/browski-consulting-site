@@ -4,25 +4,23 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export async function GET(req: NextRequest) {
   try {
-    // 🔐 Enforce admin access
     await requireAdmin(req);
 
-    // 📥 Read query param
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");
 
-    // 🧠 Base query
     let query = supabaseAdmin
-      .from("tradeify_accounts")
+      .from("profiles")
       .select("*")
       .order("created_at", { ascending: false });
 
-    // 🎯 Apply filter if not "all"
-    if (status && status !== "all") {
-      query = query.eq("approval_status", status);
+    if (status === "pending") {
+      query = query.eq("active", false);
+    } else if (status === "approved") {
+      query = query.eq("active", true);
     }
+    // status === "all" or anything else returns everything
 
-    // 🚀 Execute query
     const { data, error } = await query;
 
     if (error) {
@@ -32,10 +30,8 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // ✅ Return accounts
     return NextResponse.json(data || []);
   } catch (err: any) {
-    // 🔒 Handles unauthorized / forbidden
     return NextResponse.json(
       { error: err?.message || "Forbidden" },
       { status: 403 }

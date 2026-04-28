@@ -7,22 +7,19 @@ export async function POST(
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-   await requireAdmin(req);
+    await requireAdmin(req);
 
     const { id } = await context.params;
-    const body = await req.json().catch(() => ({}));
+    const email = decodeURIComponent(id);
 
-    if (!id) {
-      return NextResponse.json({ error: "Missing account id" }, { status: 400 });
+    if (!email) {
+      return NextResponse.json({ error: "Missing account identifier" }, { status: 400 });
     }
 
     const { data, error } = await supabaseAdmin
-      .from("tradeify_accounts")
-      .update({
-        approval_status: "disabled",
-        notes: body.notes || "",
-      })
-      .eq("id", id)
+      .from("profiles")
+      .update({ active: false })
+      .ilike("email", email)
       .select("*")
       .single();
 

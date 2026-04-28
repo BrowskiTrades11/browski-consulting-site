@@ -7,14 +7,14 @@ export async function GET(req: NextRequest) {
     const user = await requireUser(req);
 
     const { data, error } = await supabaseAdmin
-  .from("admin_users")
-  .select("email")
-  .eq("email", user.email)
-  .maybeSingle();
+      .from("profiles")
+      .select("role")
+      .ilike("email", user.email ?? "")
+      .maybeSingle();
 
-return NextResponse.json({
-  isAdmin: !!data && !error
-});
+    return NextResponse.json({
+      isAdmin: !error && data?.role === "admin",
+    });
   } catch {
     return NextResponse.json({ isAdmin: false });
   }
