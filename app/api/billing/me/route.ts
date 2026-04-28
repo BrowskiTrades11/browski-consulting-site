@@ -4,7 +4,7 @@ import { getSubscriptionForUser } from "@/lib/mock-db";
 
 export async function GET(req: NextRequest) {
   try {
-    const user = requireUser(req);
+    const user = await requireUser(req);
     const subscription = getSubscriptionForUser(user.id);
 
     if (!subscription) {

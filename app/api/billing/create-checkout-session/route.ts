@@ -4,7 +4,7 @@ import { requireUser } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = requireUser(req);
+    const user = await requireUser(req);
 
     if (!process.env.STRIPE_MONEY_PRINT_ORB_PRICE_ID) {
       return NextResponse.json({ error: "Missing STRIPE_MONEY_PRINT_ORB_PRICE_ID" }, { status: 500 });

@@ -4,7 +4,7 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export async function POST(req: NextRequest) {
   try {
-    const user = requireUser(req);
+    const user = await requireUser(req);
     const body = await req.json();
     const propAccountId = String(body.propAccountId || "").trim();
 

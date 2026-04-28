@@ -4,7 +4,7 @@ import { getAccountsForUser } from "@/lib/mock-db";
 
 export async function GET(req: NextRequest) {
   try {
-    const user = requireUser(req);
+    const user = await requireUser(req);
     const accounts = getAccountsForUser(user.id);
     return NextResponse.json({ accounts });
   } catch {

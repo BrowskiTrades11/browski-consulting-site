@@ -270,15 +270,15 @@ async function loadAdminAccounts() {
         onBack={() => setPage("home")}
         onTradeifySubmit={handleTradeifySubmit}
         onCheckout={handleCheckout}
-        onOpenAdmin={async () => {
+        onOpenAdmin={user?.isAdmin ? async () => {
           setPage("admin");
           await loadAdminAccounts();
-        }}
+        } : undefined}
       />
     );
   }
 
-  if (page === "admin") {
+  if (page === "admin" && user?.isAdmin) {
     return (
       <AdminDashboardPage
         user={user}
@@ -337,10 +337,10 @@ async function loadAdminAccounts() {
   return (
     <LandingPage
       setPage={setPage}
-      onOpenAdmin={async () => {
+      onOpenAdmin={user?.isAdmin ? async () => {
         setPage("admin");
         await loadAdminAccounts();
-      }}
+      } : undefined}
     />
   );
 }
@@ -856,7 +856,7 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
             </p>
           </div>
           <div className="button-row">
-            <button onClick={onOpenAdmin} className="btn btn-outline">Admin Approval UI</button>
+            {onOpenAdmin && <button onClick={onOpenAdmin} className="btn btn-outline">Admin Approval UI</button>}
             <button onClick={onBack} className="btn btn-outline">Back to landing page</button>
           </div>
         </div>
