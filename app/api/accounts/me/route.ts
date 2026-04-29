@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
       accounts: [{
         propAccountId: data.prop_account_id,
         approvalStatus: data.active ? "approved" : "pending",
+        licenseKey: data.active ? data.prop_account_id : null,
       }],
     });
   } catch {

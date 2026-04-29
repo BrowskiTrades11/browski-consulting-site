@@ -863,7 +863,7 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
           <StatusCard title="Subscription" value={dashboardState.subscriptionStatus} />
           <StatusCard title="Tradeify Account" value={dashboardState.tradeifyAccountId || "Not submitted"} />
           <StatusCard title="Approval Status" value={dashboardState.approvalStatus} />
-          <StatusCard title="License Key" value={dashboardState.licenseKey} />
+          <StatusCard title="Tradeify License" value={dashboardState.licenseKey || (dashboardState.approvalStatus === "approved" ? dashboardState.tradeifyAccountId : "Available after approval")} />
         </div>
 
         <div className="card" style={{ marginTop: 26 }}>
