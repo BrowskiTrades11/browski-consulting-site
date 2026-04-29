@@ -267,7 +267,7 @@ async function loadAdminAccounts() {
       <DashboardPage
         user={user}
         dashboardState={dashboardState}
-        onBack={() => setPage("home")}
+        onBack={() => { setUser(null); setToken(""); setPage("home"); }}
         onTradeifySubmit={handleTradeifySubmit}
         onCheckout={handleCheckout}
         onOpenAdmin={user?.isAdmin ? async () => {
@@ -850,12 +850,12 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
           <div>
             <h1 style={{ fontSize: 40 }}>Dashboard</h1>
             <p className="muted" style={{ marginTop: 10 }}>
-              {user ? `Logged in as ${user.fullName || user.email}` : "Authenticated session"}
+              {user ? `Logged in as ${user.email}` : "Authenticated session"}
             </p>
           </div>
           <div className="button-row">
             {onOpenAdmin && <button onClick={onOpenAdmin} className="btn btn-outline">Admin Approval UI</button>}
-            <button onClick={onBack} className="btn btn-outline">Back to landing page</button>
+            <button onClick={onBack} className="btn btn-outline">Log out</button>
           </div>
         </div>
 
