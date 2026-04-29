@@ -239,6 +239,17 @@ async function loadAdminAccounts() {
   }));
 }
 
+  async function handleDownload() {
+    const data = await apiFetch("/download/bot", {
+      method: "GET",
+      headers: authHeaders,
+    });
+
+    if (data.url) {
+      window.open(data.url, "_blank");
+    }
+  }
+
   async function handleCheckout() {
     const data = await apiFetch("/billing/create-checkout-session", {
       method: "POST",
@@ -270,6 +281,7 @@ async function loadAdminAccounts() {
         onBack={() => { setUser(null); setToken(""); setPage("home"); }}
         onTradeifySubmit={handleTradeifySubmit}
         onCheckout={handleCheckout}
+        onDownload={handleDownload}
         onOpenAdmin={user?.isAdmin ? async () => {
           setPage("admin");
           await loadAdminAccounts();
@@ -810,7 +822,7 @@ function AuthShell({ title, children, onBack }: any) {
   );
 }
 
-function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheckout, onOpenAdmin }: any) {
+function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheckout, onDownload, onOpenAdmin }: any) {
   const [propAccountId, setPropAccountId] = useState(dashboardState.tradeifyAccountId || "");
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
@@ -907,6 +919,11 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
             <button onClick={onCheckout} className="btn btn-accent" style={{ marginTop: 20 }}>
               Open Checkout
             </button>
+            {dashboardState.subscriptionStatus === "active" && (
+              <button onClick={onDownload} className="btn btn-accent" style={{ marginTop: 12 }}>
+                Download Bot (NinjaTrader)
+              </button>
+            )}
           </div>
 
           <div className="card">
