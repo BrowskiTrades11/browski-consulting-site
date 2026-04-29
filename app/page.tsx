@@ -90,6 +90,7 @@ export default function BrowskiConsultingApp() {
     tradeifyAccountId: "",
     approvalStatus: "Not submitted",
     licenseKey: "Available after approval",
+    cancellationRequested: false,
   });
   const [adminAccounts, setAdminAccounts] = useState<Account[]>([]);
   const [adminMessage, setAdminMessage] = useState("");
@@ -133,6 +134,7 @@ async function loadAdminAccounts() {
         approvalStatus: acct.active ? "approved" : "pending",
         licenseKey: null,
         notes: "",
+        cancellationRequested: acct.cancellation_requested || false,
       }))
     );
   } catch (err) {
@@ -166,6 +168,7 @@ async function loadAdminAccounts() {
       tradeifyAccountId: account.propAccountId || "",
       approvalStatus: account.approvalStatus || prev.approvalStatus,
       licenseKey: account.licenseKey || prev.licenseKey,
+      cancellationRequested: account.cancellationRequested || false,
     }));
   }
 
@@ -239,6 +242,14 @@ async function loadAdminAccounts() {
   }));
 }
 
+  async function handleCancelRequest() {
+    await apiFetch("/accounts/cancel-request", {
+      method: "POST",
+      headers: authHeaders,
+    });
+    setDashboardState((prev) => ({ ...prev, cancellationRequested: true }));
+  }
+
   async function handleDownload() {
     const data = await apiFetch("/download/bot", {
       method: "GET",
@@ -282,6 +293,7 @@ async function loadAdminAccounts() {
         onTradeifySubmit={handleTradeifySubmit}
         onCheckout={handleCheckout}
         onDownload={handleDownload}
+        onCancelRequest={handleCancelRequest}
         onOpenAdmin={user?.isAdmin ? async () => {
           setPage("admin");
           await loadAdminAccounts();
@@ -822,7 +834,7 @@ function AuthShell({ title, children, onBack }: any) {
   );
 }
 
-function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheckout, onDownload, onOpenAdmin }: any) {
+function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheckout, onDownload, onCancelRequest, onOpenAdmin }: any) {
   const [propAccountId, setPropAccountId] = useState(dashboardState.tradeifyAccountId || "");
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
@@ -923,6 +935,11 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
               <button onClick={onDownload} className="btn btn-accent" style={{ marginTop: 12 }}>
                 Download Bot (NinjaTrader)
               </button>
+            )}
+            {dashboardState.subscriptionStatus === "active" && (
+              dashboardState.cancellationRequested
+                ? <p className="lede" style={{ marginTop: 12, fontSize: 14, color: "#ff9b9b" }}>Cancellation requested — we will be in touch.</p>
+                : <button onClick={onCancelRequest} className="btn btn-outline" style={{ marginTop: 12, color: "#ff9b9b", borderColor: "rgba(255,107,107,0.35)" }}>Request Cancellation</button>
             )}
           </div>
 
@@ -1087,6 +1104,9 @@ function AdminDashboardPage({ user, accounts, message, onRefresh, onBack, onAppr
                   <DetailRow label="Tradeify Account" value={selectedAccount.propAccountId} />
                   <DetailRow label="Submitted" value={selectedAccount.submittedAt} />
                   <DetailRow label="Status" value={selectedAccount.approvalStatus} />
+                  {selectedAccount.cancellationRequested && (
+                    <DetailRow label="⚠ Cancellation" value="Requested by user" />
+                  )}
                 </div>
 
                 <div className="card-tight" style={{ marginTop: 18 }}>

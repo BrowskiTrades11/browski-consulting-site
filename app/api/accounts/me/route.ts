@@ -26,6 +26,7 @@ export async function GET(req: NextRequest) {
         propAccountId: data.prop_account_id,
         approvalStatus: data.active ? "approved" : "pending",
         licenseKey: data.active ? data.prop_account_id : null,
+        cancellationRequested: data.cancellation_requested || false,
       }],
     });
   } catch {
