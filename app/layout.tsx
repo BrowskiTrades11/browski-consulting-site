@@ -5,8 +5,8 @@ export const metadata: Metadata = {
   title: "Browski Consulting",
   description: "Money Print ORB subscription site",
   icons: {
-    icon: "/browskiconsulting Glow Logo.png",
-    apple: "/browskiconsulting Glow Logo.png",
+    icon: "/logo.png",
+    apple: "/logo.png",
   },
 };
 
