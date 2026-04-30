@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
-import { upsertSubscription } from "@/lib/mock-db";
 
 export async function POST(req: NextRequest) {
   const signature = req.headers.get("stripe-signature");
@@ -21,13 +20,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object as Stripe.Checkout.Session;
-      const userId = session.metadata?.userId;
-      if (userId) {
-        upsertSubscription(userId, "active");
-      }
-    }
+    // Subscription state is read live from Stripe — no local DB action needed here.
+    // Add additional event handling below as required (e.g. customer.subscription.deleted).
 
     return NextResponse.json({ received: true });
   } catch (error: any) {

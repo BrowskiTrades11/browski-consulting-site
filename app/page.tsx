@@ -14,6 +14,7 @@ type Account = {
   approvalStatus: "pending" | "approved" | "rejected" | "disabled";
   licenseKey: string | null;
   notes: string;
+  cancellationRequested?: boolean;
 };
 
 const mockPendingAccounts: Account[] = [

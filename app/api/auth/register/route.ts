@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { supabase } from "@/lib/supabase-client";
 import { sendAdminEmail } from "@/lib/email";
+import { sendAdminEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -39,6 +40,11 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+
+  await sendAdminEmail(
+    "New member registered",
+    `<p><strong>${email}</strong> just created an account.</p><p>They will need to subscribe and submit their Tradeify ID before you can approve them.</p>`
+  );
 
   return NextResponse.json({
     token: sessionData.session.access_token,
