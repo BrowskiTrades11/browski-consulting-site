@@ -834,15 +834,24 @@ function AuthShell({ title, children, onBack }: any) {
   );
 }
 
-function TutorialPanel({ title, steps }: { title: string; steps: { n: number; text: string }[] }) {
+function TutorialPanel({ title, steps }: { title: string; steps: { n: number; text: string; images?: string[] }[] }) {
   return (
     <div>
       <h4 style={{ fontSize: 20, marginBottom: 16, color: "#7fff00" }}>{title}</h4>
       <ol style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: 12 }}>
         {steps.map((s) => (
-          <li key={s.n} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
-            <span style={{ background: "#7fff00", color: "#000", borderRadius: "50%", width: 26, height: 26, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 13, flexShrink: 0 }}>{s.n}</span>
-            <span style={{ color: "#ccc", lineHeight: 1.6, paddingTop: 3 }}>{s.text}</span>
+          <li key={s.n} style={{ display: "flex", gap: 14, alignItems: "flex-start", flexDirection: "column" }}>
+            <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+              <span style={{ background: "#7fff00", color: "#000", borderRadius: "50%", width: 26, height: 26, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 13, flexShrink: 0 }}>{s.n}</span>
+              <span style={{ color: "#ccc", lineHeight: 1.6, paddingTop: 3 }}>{s.text}</span>
+            </div>
+            {s.images && s.images.length > 0 && (
+              <div style={{ display: "flex", gap: 12, flexWrap: "wrap", paddingLeft: 40 }}>
+                {s.images.map((src) => (
+                  <img key={src} src={src} alt="NinjaTrader configuration" style={{ borderRadius: 8, border: "1px solid #333", maxWidth: 320, width: "100%" }} />
+                ))}
+              </div>
+            )}
           </li>
         ))}
       </ol>
@@ -1040,7 +1049,11 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
         { n: 6, text: "You will see a confirmation that the import was successful. Restart NinjaTrader." },
         { n: 7, text: "After restart, open a new chart. Set the instrument to NQ (Nasdaq 100 futures) and the chart type to Candlestick with a 3-minute interval. The bot is designed specifically for 3-minute NQ charts." },
         { n: 8, text: "Right-click the chart → Strategies → Add Strategy. Find \"MoneyPrintORB\" in the list and select it." },
-        { n: 9, text: "In the strategy configuration panel, enter your Tradeify Account ID in the License Key field. Set your desired quantity and other parameters." },
+        {
+          n: 9,
+          text: "In the strategy configuration panel, find the \"License\" section and enter your Tradeify Account ID in the \"Tradeify ID\" field. Under \"Setup\", select your live Tradeify account from the Account dropdown. Do not change any other settings — modifying parameters may cause the bot to not work properly.",
+          images: ["/nt-config-enabled.png", "/nt-config-license.png", "/nt-config-account.png"],
+        },
         { n: 10, text: "Click OK and enable the strategy. The bot will begin trading automatically on the connected Tradeify account." },
       ]} />
     )}
