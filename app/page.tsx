@@ -902,17 +902,17 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
     <li>
       <input type="checkbox" checked={onboarding.tradeifyCreated} onChange={() =>
         setOnboarding((p) => ({ ...p, tradeifyCreated: !p.tradeifyCreated }))
-      } /> Create Tradeify account
+      } /> Create Tradeify account — <a href="https://tradeify.co" target="_blank" rel="noopener noreferrer" style={{ color: "#7fff00" }}>tradeify.co</a>
     </li>
     <li>
       <input type="checkbox" checked={onboarding.ninjaCreated} onChange={() =>
         setOnboarding((p) => ({ ...p, ninjaCreated: !p.ninjaCreated }))
-      } /> Create NinjaTrader account
+      } /> Create NinjaTrader account — <a href="https://ninjatrader.com" target="_blank" rel="noopener noreferrer" style={{ color: "#7fff00" }}>ninjatrader.com</a>
     </li>
     <li>
       <input type="checkbox" checked={onboarding.ninjaInstalled} onChange={() =>
         setOnboarding((p) => ({ ...p, ninjaInstalled: !p.ninjaInstalled }))
-      } /> Install NinjaTrader
+      } /> Install NinjaTrader — <a href="https://ninjatrader.com/trading-platform" target="_blank" rel="noopener noreferrer" style={{ color: "#7fff00" }}>Download here</a>
     </li>
     <li>
       <input type="checkbox" checked={onboarding.accountConnected} onChange={() =>
