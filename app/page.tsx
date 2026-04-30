@@ -1028,7 +1028,9 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
       )}
     </div>
   );
-}({ user, accounts, message, onRefresh, onBack, onApprove, onReject, onDisable }: any) {
+}
+
+function AdminDashboardPage({ user, accounts, message, onRefresh, onBack, onApprove, onReject, onDisable }: any) {
   const [filter, setFilter] = useState("pending");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [notes, setNotes] = useState("");
