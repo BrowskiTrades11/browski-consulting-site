@@ -1038,7 +1038,7 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
         { n: 4, text: "Open NinjaTrader. In the Control Center, go to Tools → Import → NinjaScript Add-On..." },
         { n: 5, text: "Browse to the downloaded MONEYPRINTORB.zip file and click Open. NinjaTrader will import and compile the strategy." },
         { n: 6, text: "You will see a confirmation that the import was successful. Restart NinjaTrader." },
-        { n: 7, text: "After restart, open a chart for the instrument you want to trade (e.g., NQ or ES futures)." },
+        { n: 7, text: "After restart, open a new chart. Set the instrument to NQ (Nasdaq 100 futures) and the chart type to Candlestick with a 3-minute interval. The bot is designed specifically for 3-minute NQ charts." },
         { n: 8, text: "Right-click the chart → Strategies → Add Strategy. Find \"MoneyPrintORB\" in the list and select it." },
         { n: 9, text: "In the strategy configuration panel, enter your Tradeify Account ID in the License Key field. Set your desired quantity and other parameters." },
         { n: 10, text: "Click OK and enable the strategy. The bot will begin trading automatically on the connected Tradeify account." },
