@@ -839,6 +839,8 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
   const [onboarding, setOnboarding] = useState({
   tradeifyCreated: false,
   ninjaCreated: false,
@@ -928,7 +930,25 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
             <p className="lede" style={{ fontSize: 16, marginTop: 12 }}>
               Begin access to the Money Print ORB system ($499/month). Requires a funded trading account (~$120/month, paid directly to the provider) and a NinjaTrader account. Step-by-step setup guide provided after signup.
             </p>
-            <button onClick={onCheckout} className="btn btn-accent" style={{ marginTop: 20 }}>
+
+            <div style={{ marginTop: 20, display: "flex", alignItems: "flex-start", gap: 10 }}>
+              <input
+                type="checkbox"
+                id="terms"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                style={{ marginTop: 3, accentColor: "#7fff00", flexShrink: 0 }}
+              />
+              <label htmlFor="terms" style={{ fontSize: 14, color: "#aaa", cursor: "pointer" }}>
+                I have read and agree to the{" "}
+                <button onClick={() => setShowTerms(true)} style={{ background: "none", border: "none", color: "#7fff00", cursor: "pointer", padding: 0, fontSize: 14, textDecoration: "underline" }}>
+                  Terms of Service and Risk Disclosure
+                </button>
+                . I understand that trading involves substantial risk of loss and that Browski Consulting provides no guarantee of profits.
+              </label>
+            </div>
+
+            <button onClick={onCheckout} disabled={!termsAccepted} className="btn btn-accent" style={{ marginTop: 14, opacity: termsAccepted ? 1 : 0.4, cursor: termsAccepted ? "pointer" : "not-allowed" }}>
               Open Checkout
             </button>
             {dashboardState.subscriptionStatus === "active" && (
@@ -959,11 +979,56 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
           </div>
         </div>
       </div>
+
+      {showTerms && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)", zIndex: 1000, overflowY: "auto", display: "flex", alignItems: "flex-start", justifyContent: "center", padding: "40px 16px" }}>
+          <div style={{ background: "#111", border: "1px solid #333", borderRadius: 16, maxWidth: 720, width: "100%", padding: 40 }}>
+            <h2 style={{ fontSize: 28, marginBottom: 24 }}>Terms of Service &amp; Risk Disclosure</h2>
+            <div style={{ color: "#ccc", lineHeight: 1.8, fontSize: 15 }}>
+              <p><strong>Last updated: {new Date().getFullYear()}</strong></p>
+
+              <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>1. Not Financial Advice</h3>
+              <p>Browski Consulting and the Money Print ORB system do not constitute financial advice, investment advice, trading advice, or any other type of advice. All content, strategies, and tools provided are for informational and educational purposes only. You should not make any financial decision based solely on the information provided by Browski Consulting.</p>
+
+              <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>2. Risk of Loss</h3>
+              <p>Trading futures, forex, equities, or any other financial instrument involves a substantial risk of loss and is not appropriate for all investors. Past performance of the Money Print ORB system or any strategy discussed is not necessarily indicative of future results. You may lose some or all of your invested capital. Never trade with money you cannot afford to lose.</p>
+
+              <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>3. No Guarantee of Profits</h3>
+              <p>Browski Consulting makes no guarantee, representation, or warranty that the use of the Money Print ORB system will result in profits or will not result in losses. All trading results shown are hypothetical or illustrative unless explicitly stated otherwise.</p>
+
+              <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>4. Limitation of Liability</h3>
+              <p>To the fullest extent permitted by applicable law, Browski Consulting, its owner Trenton Dombrowski, affiliates, and partners shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, loss of capital, or loss of data, arising from your use of the Money Print ORB system or reliance on any information provided.</p>
+
+              <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>5. Subscription Terms</h3>
+              <p>The Money Print ORB subscription is billed at $499 per month. Subscriptions renew automatically unless cancelled. You may request cancellation at any time through your member dashboard. A 50% refund of your first month's payment may be requested within 30 days of your initial subscription under the satisfaction guarantee, subject to review. No refunds are issued after 30 days.</p>
+
+              <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>6. Account Activation</h3>
+              <p>Access to the Money Print ORB bot is contingent upon approval of your Tradeify account by Browski Consulting. Browski Consulting reserves the right to deny or revoke access at its sole discretion, including in cases of misuse, violation of these terms, or fraudulent activity.</p>
+
+              <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>7. Third-Party Platforms</h3>
+              <p>The Money Print ORB system operates through NinjaTrader and requires a funded Tradeify prop trading account. Browski Consulting is not affiliated with NinjaTrader or Tradeify and is not responsible for any issues, losses, or service interruptions arising from those platforms.</p>
+
+              <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>8. Governing Law</h3>
+              <p>These terms shall be governed by and construed in accordance with the laws of the State of South Carolina, United States, without regard to its conflict of law provisions. Any disputes shall be resolved in the courts of South Carolina.</p>
+
+              <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>9. Agreement</h3>
+              <p>By checking the agreement box and proceeding to checkout, you confirm that you have read, understood, and agree to these Terms of Service and Risk Disclosure in their entirety.</p>
+            </div>
+
+            <div style={{ display: "flex", gap: 12, marginTop: 32 }}>
+              <button onClick={() => { setTermsAccepted(true); setShowTerms(false); }} className="btn btn-accent">
+                I Agree
+              </button>
+              <button onClick={() => setShowTerms(false)} className="btn btn-outline">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
-
-function AdminDashboardPage({ user, accounts, message, onRefresh, onBack, onApprove, onReject, onDisable }: any) {
+}({ user, accounts, message, onRefresh, onBack, onApprove, onReject, onDisable }: any) {
   const [filter, setFilter] = useState("pending");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [notes, setNotes] = useState("");
