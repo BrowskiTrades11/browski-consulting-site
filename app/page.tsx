@@ -834,6 +834,22 @@ function AuthShell({ title, children, onBack }: any) {
   );
 }
 
+function TutorialPanel({ title, steps }: { title: string; steps: { n: number; text: string }[] }) {
+  return (
+    <div>
+      <h4 style={{ fontSize: 20, marginBottom: 16, color: "#7fff00" }}>{title}</h4>
+      <ol style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: 12 }}>
+        {steps.map((s) => (
+          <li key={s.n} style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+            <span style={{ background: "#7fff00", color: "#000", borderRadius: "50%", width: 26, height: 26, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 13, flexShrink: 0 }}>{s.n}</span>
+            <span style={{ color: "#ccc", lineHeight: 1.6, paddingTop: 3 }}>{s.text}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheckout, onDownload, onCancelRequest, onOpenAdmin }: any) {
   const [propAccountId, setPropAccountId] = useState(dashboardState.tradeifyAccountId || "");
   const [submitting, setSubmitting] = useState(false);
@@ -841,6 +857,7 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
   const [error, setError] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+  const [activeTutorial, setActiveTutorial] = useState<string | null>(null);
   const [onboarding, setOnboarding] = useState({
   tradeifyCreated: false,
   ninjaCreated: false,
@@ -895,35 +912,140 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
         <div className="card" style={{ marginTop: 26 }}>
   <h3 style={{ fontSize: 28 }}>Onboarding Guide</h3>
   <p className="lede" style={{ marginTop: 12 }}>
-    Complete these steps to activate your system.
+    Complete these steps to activate your system. Click <strong style={{ color: "#7fff00" }}>View Tutorial</strong> for step-by-step instructions on each item.
   </p>
 
-  <ul style={{ marginTop: 20, lineHeight: 2 }}>
-    <li>
-      <input type="checkbox" checked={onboarding.tradeifyCreated} onChange={() =>
-        setOnboarding((p) => ({ ...p, tradeifyCreated: !p.tradeifyCreated }))
-      } /> Create Tradeify account — <a href="https://tradeify.co" target="_blank" rel="noopener noreferrer" style={{ color: "#7fff00" }}>tradeify.co</a>
-    </li>
-    <li>
-      <input type="checkbox" checked={onboarding.ninjaCreated} onChange={() =>
-        setOnboarding((p) => ({ ...p, ninjaCreated: !p.ninjaCreated }))
-      } /> Create NinjaTrader account — <a href="https://ninjatrader.com" target="_blank" rel="noopener noreferrer" style={{ color: "#7fff00" }}>ninjatrader.com</a>
-    </li>
-    <li>
-      <input type="checkbox" checked={onboarding.ninjaInstalled} onChange={() =>
-        setOnboarding((p) => ({ ...p, ninjaInstalled: !p.ninjaInstalled }))
-      } /> Install NinjaTrader — <a href="https://ninjatrader.com/trading-platform" target="_blank" rel="noopener noreferrer" style={{ color: "#7fff00" }}>Download here</a>
-    </li>
-    <li>
-      <input type="checkbox" checked={onboarding.accountConnected} onChange={() =>
-        setOnboarding((p) => ({ ...p, accountConnected: !p.accountConnected }))
-      } /> Connect your account
-    </li>
-    <li>
-      <input type="checkbox" checked={onboarding.submitted} readOnly /> Submit Tradeify account ID
-    </li>
+  {/* Checklist */}
+  <ul style={{ marginTop: 20, listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: 14 }}>
+    {[
+      {
+        key: "tradeifyCreated",
+        label: "Create Tradeify account",
+        link: { href: "https://tradeify.co", text: "tradeify.co" },
+        tutorial: "tradeify-create",
+      },
+      {
+        key: "ninjaCreated",
+        label: "Create NinjaTrader account",
+        link: { href: "https://ninjatrader.com", text: "ninjatrader.com" },
+        tutorial: "ninja-create",
+      },
+      {
+        key: "ninjaInstalled",
+        label: "Install NinjaTrader platform",
+        link: { href: "https://ninjatrader.com/trading-platform", text: "Download here" },
+        tutorial: "ninja-install",
+      },
+      {
+        key: "accountConnected",
+        label: "Connect Tradeify account to NinjaTrader",
+        tutorial: "ninja-connect",
+      },
+      {
+        key: "submitted",
+        label: "Submit Tradeify account ID",
+        tutorial: "tradeify-submit",
+        readOnly: true,
+      },
+      {
+        key: null,
+        label: "Deploy Money Print ORB bot",
+        tutorial: "bot-deploy",
+      },
+    ].map((item) => (
+      <li key={item.key ?? item.tutorial} style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        <input
+          type="checkbox"
+          checked={item.readOnly ? !!onboarding.submitted : item.key ? !!(onboarding as any)[item.key] : false}
+          readOnly={item.readOnly || item.key === null}
+          onChange={item.key && !item.readOnly ? () => setOnboarding((p) => ({ ...p, [item.key!]: !(p as any)[item.key!] })) : undefined}
+          style={{ accentColor: "#7fff00", width: 16, height: 16, flexShrink: 0 }}
+        />
+        <span style={{ flex: 1 }}>
+          {item.label}
+          {item.link && (
+            <> — <a href={item.link.href} target="_blank" rel="noopener noreferrer" style={{ color: "#7fff00" }}>{item.link.text}</a></>
+          )}
+        </span>
+        <button
+          onClick={() => setActiveTutorial(activeTutorial === item.tutorial ? null : item.tutorial)}
+          style={{ background: "none", border: "1px solid #7fff00", color: "#7fff00", borderRadius: 6, padding: "2px 10px", fontSize: 13, cursor: "pointer", flexShrink: 0 }}
+        >
+          {activeTutorial === item.tutorial ? "Hide" : "View Tutorial"}
+        </button>
+      </li>
+    ))}
   </ul>
 </div>
+
+{/* Tutorial Panels */}
+{activeTutorial && (
+  <div className="card" style={{ marginTop: 16, borderColor: "#7fff0033", background: "#0d1a0d" }}>
+    {activeTutorial === "tradeify-create" && (
+      <TutorialPanel title="How to Create a Tradeify Account" steps={[
+        { n: 1, text: "Go to tradeify.co and click \"Get Started\" or \"Buy a Challenge\"." },
+        { n: 2, text: "Choose your account size and challenge type. A funded account is required to use Money Print ORB." },
+        { n: 3, text: "Complete registration: enter your name, email, and create a password." },
+        { n: 4, text: "Check your email for a verification link and confirm your account." },
+        { n: 5, text: "Complete checkout to purchase your Tradeify challenge/funded account." },
+        { n: 6, text: "After payment, log into your Tradeify dashboard. Your account ID will be displayed — you'll need this for step 4." },
+      ]} />
+    )}
+    {activeTutorial === "ninja-create" && (
+      <TutorialPanel title="How to Create a NinjaTrader Account" steps={[
+        { n: 1, text: "Go to ninjatrader.com and click \"Get NinjaTrader Free\"." },
+        { n: 2, text: "Fill in your name, email, phone, and country." },
+        { n: 3, text: "Check your email for a verification message from NinjaTrader and click the confirmation link." },
+        { n: 4, text: "Your NinjaTrader account is now created. You'll use these credentials when setting up the platform." },
+      ]} />
+    )}
+    {activeTutorial === "ninja-install" && (
+      <TutorialPanel title="How to Install NinjaTrader" steps={[
+        { n: 1, text: "Go to ninjatrader.com/trading-platform and click the download button for Windows." },
+        { n: 2, text: "Run the downloaded installer (.exe). Accept any UAC prompts." },
+        { n: 3, text: "Follow the setup wizard — accept the license agreement and choose an install location." },
+        { n: 4, text: "Once installed, launch NinjaTrader from your desktop or Start menu." },
+        { n: 5, text: "On first launch, log in with the NinjaTrader account credentials you created in step 2." },
+        { n: 6, text: "NinjaTrader will open to the Control Center. You're ready to connect your broker account." },
+      ]} />
+    )}
+    {activeTutorial === "ninja-connect" && (
+      <TutorialPanel title="How to Connect Tradeify to NinjaTrader" steps={[
+        { n: 1, text: "Log into your Tradeify dashboard at tradeify.co. Navigate to your account details page." },
+        { n: 2, text: "Locate your connection credentials — Tradeify provides a server address, username, and password (typically for Rithmic or their broker provider)." },
+        { n: 3, text: "Open NinjaTrader. In the Control Center, go to Connections → Configure." },
+        { n: 4, text: "Click \"New\" and select the connection type that matches Tradeify's provider (e.g., Rithmic)." },
+        { n: 5, text: "Enter the server, username, and password from your Tradeify dashboard. Name the connection (e.g., \"Tradeify\")." },
+        { n: 6, text: "Click OK, then go to Connections → Connect → select your Tradeify connection." },
+        { n: 7, text: "Once connected, you should see your account balance and instruments load in the Control Center." },
+        { n: 8, text: "Note your Tradeify Account ID from the dashboard — you will submit this in step 5 to activate your license." },
+      ]} />
+    )}
+    {activeTutorial === "tradeify-submit" && (
+      <TutorialPanel title="How to Submit Your Tradeify Account ID" steps={[
+        { n: 1, text: "Log into your Tradeify dashboard at tradeify.co." },
+        { n: 2, text: "Find your Account ID — it is displayed on your account overview or dashboard page (format is usually a number like 12345678)." },
+        { n: 3, text: "Return to this dashboard and paste your Tradeify Account ID into the \"Submit Tradeify Account\" form on the right." },
+        { n: 4, text: "Click \"Submit Account\". This sends your ID to Browski Consulting for review." },
+        { n: 5, text: "You will receive an email when your account is approved. Your license key (your Tradeify ID) will then appear in your dashboard above." },
+      ]} />
+    )}
+    {activeTutorial === "bot-deploy" && (
+      <TutorialPanel title="How to Deploy the Money Print ORB Bot" steps={[
+        { n: 1, text: "Make sure you have an active subscription and your Tradeify account has been approved. The Download Bot button will appear in your dashboard." },
+        { n: 2, text: "Click \"Download Bot (NinjaTrader)\" in your dashboard. A ZIP file (MONEYPRINTORB.zip) will be downloaded." },
+        { n: 3, text: "Do NOT unzip the file. NinjaTrader imports strategies directly from the ZIP." },
+        { n: 4, text: "Open NinjaTrader. In the Control Center, go to Tools → Import → NinjaScript Add-On..." },
+        { n: 5, text: "Browse to the downloaded MONEYPRINTORB.zip file and click Open. NinjaTrader will import and compile the strategy." },
+        { n: 6, text: "You will see a confirmation that the import was successful. Restart NinjaTrader." },
+        { n: 7, text: "After restart, open a chart for the instrument you want to trade (e.g., NQ or ES futures)." },
+        { n: 8, text: "Right-click the chart → Strategies → Add Strategy. Find \"MoneyPrintORB\" in the list and select it." },
+        { n: 9, text: "In the strategy configuration panel, enter your Tradeify Account ID in the License Key field. Set your desired quantity and other parameters." },
+        { n: 10, text: "Click OK and enable the strategy. The bot will begin trading automatically on the connected Tradeify account." },
+      ]} />
+    )}
+  </div>
+)}
         <div className="grid-2" style={{ marginTop: 26 }}>
           <div className="card">
             <h3 style={{ fontSize: 28 }}>Start Subscription</h3>
