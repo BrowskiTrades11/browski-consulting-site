@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { sendAdminEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,6 +25,11 @@ export async function POST(req: NextRequest) {
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    await sendAdminEmail(
+      "Tradeify ID submitted — approval needed",
+      `<p><strong>${email}</strong> submitted Tradeify ID: <strong>${propAccountId}</strong></p><p>Log in to the admin panel to approve or reject their account.</p>`
+    );
 
     return NextResponse.json({
       account: {
