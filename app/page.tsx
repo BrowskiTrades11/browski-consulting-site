@@ -98,23 +98,23 @@ export default function BrowskiConsultingApp() {
   //
   useEffect(() => {
   const params = new URLSearchParams(window.location.search);
+  const savedToken = localStorage.getItem("browski_token");
 
-  if (params.get("checkout") === "success") {
-    const savedToken = localStorage.getItem("browski_token");
+  if (params.get("checkout") === "success" || params.get("go") === "dashboard") {
     if (savedToken) {
       const headers = { Authorization: `Bearer ${savedToken}` };
       setToken(savedToken);
       setPage("dashboard");
-      setTimeout(() => {
-        loadDashboardData(headers);
-      }, 0);
+      setTimeout(() => { loadDashboardData(headers); }, 0);
     } else {
-      setDashboardState((prev) => ({
-        ...prev,
-        subscriptionStatus: "Active subscription",
-      }));
       setPage("dashboard");
     }
+  } else if (savedToken) {
+    // Restore session on any page load
+    const headers = { Authorization: `Bearer ${savedToken}` };
+    setToken(savedToken);
+    setPage("dashboard");
+    setTimeout(() => { loadDashboardData(headers); }, 0);
   }
 }, []);
 
@@ -301,7 +301,7 @@ async function loadAdminAccounts() {
       <DashboardPage
         user={user}
         dashboardState={dashboardState}
-        onBack={() => { setUser(null); setToken(""); setPage("home"); }}
+        onBack={() => { localStorage.removeItem("browski_token"); setUser(null); setToken(""); setPage("home"); }}
         onTradeifySubmit={handleTradeifySubmit}
         onCheckout={handleCheckout}
         onDownload={handleDownload}
