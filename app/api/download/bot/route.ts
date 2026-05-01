@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
       .createSignedUrl("MONEYPRINTORB.zip", 60);
 
     if (error || !data?.signedUrl) {
-      return NextResponse.json({ error: "File not available" }, { status: 500 });
+      return NextResponse.json({ error: `File not available: ${error?.message || "no signed URL returned"}` }, { status: 500 });
     }
 
     return NextResponse.json({ url: data.signedUrl });
