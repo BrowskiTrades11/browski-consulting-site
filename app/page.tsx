@@ -1077,7 +1077,7 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
     )}
   </div>
 )}
-        {dashboardState.subscriptionStatus === "active" && (
+        {(dashboardState.subscriptionStatus === "active" || dashboardState.approvalStatus === "approved") && (
           <div className="card" style={{ marginTop: 26, background: "rgba(127,255,0,0.07)", border: "1px solid rgba(127,255,0,0.3)" }}>
             <h3 style={{ fontSize: 28, color: "#7fff00" }}>Download Money Print ORB</h3>
             <p className="lede" style={{ fontSize: 16, marginTop: 10 }}>Your subscription is active. Download the bot ZIP file and follow the Deploy tutorial to install it in NinjaTrader.</p>
@@ -1087,7 +1087,7 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
             <div style={{ marginTop: 14 }}>
               {dashboardState.cancellationRequested
                 ? <p className="lede" style={{ fontSize: 14, color: "#ff9b9b" }}>Cancellation requested — we will be in touch.</p>
-                : <button onClick={onCancelRequest} className="btn btn-outline" style={{ color: "#ff9b9b", borderColor: "rgba(255,107,107,0.35)" }}>Request Cancellation</button>
+                : dashboardState.subscriptionStatus === "active" ? <button onClick={onCancelRequest} className="btn btn-outline" style={{ color: "#ff9b9b", borderColor: "rgba(255,107,107,0.35)" }}>Request Cancellation</button> : null
               }
             </div>
           </div>
