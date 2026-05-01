@@ -306,6 +306,7 @@ async function loadAdminAccounts() {
         onCheckout={handleCheckout}
         onDownload={handleDownload}
         onCancelRequest={handleCancelRequest}
+        onRefresh={() => loadDashboardData()}
         onOpenAdmin={user?.isAdmin ? async () => {
           setPage("admin");
           await loadAdminAccounts();
@@ -876,7 +877,7 @@ function TutorialPanel({ title, steps }: { title: string; steps: { n: number; te
   );
 }
 
-function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheckout, onDownload, onCancelRequest, onOpenAdmin }: any) {
+function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheckout, onDownload, onCancelRequest, onRefresh, onOpenAdmin }: any) {
   const [propAccountId, setPropAccountId] = useState(dashboardState.tradeifyAccountId || "");
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
@@ -924,6 +925,7 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
           </div>
           <div className="button-row">
             {onOpenAdmin && <button onClick={onOpenAdmin} className="btn btn-outline">Admin Approval UI</button>}
+            <button onClick={onRefresh} className="btn btn-outline">Refresh Status</button>
             <button onClick={onBack} className="btn btn-outline">Log out</button>
           </div>
         </div>
@@ -1040,11 +1042,10 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
         { n: 1, text: "Open NinjaTrader. In the Control Center menu bar, go to Tools → Options (or Tools → Settings)." },
         { n: 2, text: "In the settings window, find the \"General\" section and look for \"Enable multi-provider connections\" or \"Multi-provider connections\". Turn this ON and click OK." },
         { n: 3, text: "Restart NinjaTrader. After restarting, the Connections menu will now be available in the Control Center." },
-        { n: 4, text: "Go to Connections → Configure. Click \"New\" and select \"Tradovate\" from the provider list (Tradeify runs on Tradovate)." },
-        { n: 5, text: "Log into your Tradeify dashboard at tradeify.co and navigate to your account. Find your Tradovate login credentials (username and password)." },
-        { n: 6, text: "Enter your Tradovate username and password in NinjaTrader. Name the connection (e.g., \"Tradeify\") and click OK." },
-        { n: 7, text: "Go to Connections → Connect → select your Tradeify connection. Once connected, your account balance and instruments will load in the Control Center." },
-        { n: 8, text: "Note your Tradeify Account ID from the dashboard — you will submit this in step 5 to activate your license." },
+        { n: 4, text: "Go to Connections → Configure. Click \"New\" and select \"NinjaTrader\" from the provider list." },
+        { n: 5, text: "Enter your NinjaTrader username and password. Check \"Connect on Startup\". Under \"Account type\", select \"Simulation\". Name the connection (e.g., \"Tradeify\") and click OK." },
+        { n: 6, text: "Go to Connections → Connect → select your Tradeify connection. Once connected, your account balance and instruments will load in the Control Center." },
+        { n: 7, text: "Note your Tradeify Account ID from the dashboard — you will submit this in step 5 to activate your license." },
       ]} />
     )}
     {activeTutorial === "tradeify-submit" && (
