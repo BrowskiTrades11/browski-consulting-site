@@ -271,13 +271,19 @@ async function loadAdminAccounts() {
   }
 
   async function handleDownload() {
-    const data = await apiFetch("/download/bot", {
-      method: "GET",
-      headers: authHeaders,
-    });
+    try {
+      const data = await apiFetch("/download/bot", {
+        method: "GET",
+        headers: authHeaders,
+      });
 
-    if (data.url) {
-      window.open(data.url, "_blank");
+      if (data.url) {
+        window.open(data.url, "_blank");
+      } else {
+        alert("Download failed: no URL returned. Contact support.");
+      }
+    } catch (err: any) {
+      alert(`Download failed: ${err.message}`);
     }
   }
 

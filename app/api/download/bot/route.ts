@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({ url: data.signedUrl });
-  } catch {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  } catch (err: any) {
+    return NextResponse.json({ error: err?.message || "Unknown error" }, { status: 401 });
   }
 }
