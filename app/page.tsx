@@ -1077,6 +1077,22 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
     )}
   </div>
 )}
+        {dashboardState.subscriptionStatus === "active" && (
+          <div className="card" style={{ marginTop: 26, background: "rgba(127,255,0,0.07)", border: "1px solid rgba(127,255,0,0.3)" }}>
+            <h3 style={{ fontSize: 28, color: "#7fff00" }}>Download Money Print ORB</h3>
+            <p className="lede" style={{ fontSize: 16, marginTop: 10 }}>Your subscription is active. Download the bot ZIP file and follow the Deploy tutorial to install it in NinjaTrader.</p>
+            <button onClick={onDownload} className="btn btn-accent" style={{ marginTop: 16, fontSize: 18, padding: "14px 32px" }}>
+              Download Bot (NinjaTrader)
+            </button>
+            <div style={{ marginTop: 14 }}>
+              {dashboardState.cancellationRequested
+                ? <p className="lede" style={{ fontSize: 14, color: "#ff9b9b" }}>Cancellation requested — we will be in touch.</p>
+                : <button onClick={onCancelRequest} className="btn btn-outline" style={{ color: "#ff9b9b", borderColor: "rgba(255,107,107,0.35)" }}>Request Cancellation</button>
+              }
+            </div>
+          </div>
+        )}
+
         <div className="grid-2" style={{ marginTop: 26 }}>
           <div className="card">
             <h3 style={{ fontSize: 28 }}>Start Subscription</h3>
@@ -1109,16 +1125,6 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
             <button onClick={onCheckout} disabled={!termsAccepted} className="btn btn-accent" style={{ marginTop: 14, opacity: termsAccepted ? 1 : 0.4, cursor: termsAccepted ? "pointer" : "not-allowed" }}>
               Open Checkout
             </button>
-            {dashboardState.subscriptionStatus === "active" && (
-              <button onClick={onDownload} className="btn btn-accent" style={{ marginTop: 12 }}>
-                Download Bot (NinjaTrader)
-              </button>
-            )}
-            {dashboardState.subscriptionStatus === "active" && (
-              dashboardState.cancellationRequested
-                ? <p className="lede" style={{ marginTop: 12, fontSize: 14, color: "#ff9b9b" }}>Cancellation requested — we will be in touch.</p>
-                : <button onClick={onCancelRequest} className="btn btn-outline" style={{ marginTop: 12, color: "#ff9b9b", borderColor: "rgba(255,107,107,0.35)" }}>Request Cancellation</button>
-            )}
           </div>
 
           <div className="card">
