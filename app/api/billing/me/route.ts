@@ -35,16 +35,12 @@ export async function GET(req: NextRequest) {
     }
 
     const subscription = subscriptions.data[0];
-    const periodEnd = subscription.current_period_end;
-    const periodEndIso = typeof periodEnd === "number"
-      ? new Date(periodEnd * 1000).toISOString()
-      : new Date(periodEnd as any).toISOString();
 
     return NextResponse.json({
       status: "active",
       botType: "MONEY_PRINT_ORB",
       priceMonthlyUsd: 499,
-      currentPeriodEnd: periodEndIso,
+      currentPeriodEnd: null,
     });
   } catch (err: any) {
     return NextResponse.json({ error: err?.message || "Unknown error", status: "error" }, { status: 200 });
