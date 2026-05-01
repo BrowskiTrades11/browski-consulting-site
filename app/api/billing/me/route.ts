@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
       priceMonthlyUsd: 499,
       currentPeriodEnd: new Date(subscription.current_period_end * 1000).toISOString(),
     });
-  } catch {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  } catch (err: any) {
+    return NextResponse.json({ error: err?.message || "Unknown error", status: "error" }, { status: 200 });
   }
 }

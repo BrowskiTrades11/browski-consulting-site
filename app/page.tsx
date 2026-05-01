@@ -159,6 +159,15 @@ async function loadAdminAccounts() {
     headers: headersOverride,
   });
 
+  // Detect expired/invalid token — force logout so user can re-login fresh
+  if (accountData?.__error === "Unauthorized" || accountData?.__error === "Request failed") {
+    localStorage.removeItem("browski_token");
+    setToken("");
+    setUser(null);
+    setPage("login");
+    return;
+  }
+
   const adminRes = await fetch("/api/admin/check", {
     headers: headersOverride,
   });
@@ -182,7 +191,6 @@ async function loadAdminAccounts() {
     }));
   }
 
-
     const subscriptionData = await safeApiFetch("/billing/me", {
       method: "GET",
       headers: headersOverride,
@@ -191,7 +199,7 @@ async function loadAdminAccounts() {
     if (!subscriptionData?.__error) {
       setDashboardState((prev) => ({
         ...prev,
-        subscriptionStatus: subscriptionData.status || prev.subscriptionStatus,
+        subscriptionStatus: subscriptionData.error ? `Error: ${subscriptionData.error}` : (subscriptionData.status || prev.subscriptionStatus),
       }));
     }
   }
