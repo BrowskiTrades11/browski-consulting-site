@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
 
     // Generate a short-lived signed URL (60 seconds)
     const { data, error } = await supabaseAdmin.storage
-      .from("downloads")
+      .from("Downloads")
       .createSignedUrl("MONEYPRINTORB.zip", 60);
 
     if (error || !data?.signedUrl) {
