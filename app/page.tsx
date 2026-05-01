@@ -100,12 +100,21 @@ export default function BrowskiConsultingApp() {
   const params = new URLSearchParams(window.location.search);
 
   if (params.get("checkout") === "success") {
-    setDashboardState((prev) => ({
-      ...prev,
-      subscriptionStatus: "Active subscription",
-    }));
-
-    setPage("dashboard");
+    const savedToken = localStorage.getItem("browski_token");
+    if (savedToken) {
+      const headers = { Authorization: `Bearer ${savedToken}` };
+      setToken(savedToken);
+      setPage("dashboard");
+      setTimeout(() => {
+        loadDashboardData(headers);
+      }, 0);
+    } else {
+      setDashboardState((prev) => ({
+        ...prev,
+        subscriptionStatus: "Active subscription",
+      }));
+      setPage("dashboard");
+    }
   }
 }, []);
 
@@ -196,6 +205,7 @@ async function loadAdminAccounts() {
     const newToken = data.token;
     const headers = newToken ? { Authorization: `Bearer ${newToken}` } : {};
 
+    if (newToken) localStorage.setItem("browski_token", newToken);
     setToken(newToken);
     setUser(data.user);
     setDashboardState((prev) => ({
@@ -217,6 +227,7 @@ async function loadAdminAccounts() {
     const newToken = data.token;
     const headers = newToken ? { Authorization: `Bearer ${newToken}` } : {};
 
+    if (newToken) localStorage.setItem("browski_token", newToken);
     setToken(newToken);
     setUser(data.user);
     setDashboardState((prev) => ({
