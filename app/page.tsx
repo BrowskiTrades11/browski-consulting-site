@@ -497,7 +497,12 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
               </ul>
               <button onClick={() => setPage("signup")} className="btn btn-accent full" style={{ marginTop: 18 }}>Create Account</button>
               <button onClick={() => setPage("login")} className="btn btn-outline full" style={{ marginTop: 10 }}>Login</button>
-              <p className="small" style={{ marginTop: 14 }}>
+              <div style={{ marginTop: 16, background: "rgba(255,200,0,0.08)", border: "1px solid rgba(255,200,0,0.25)", borderRadius: 10, padding: "12px 14px" }}>
+                <p style={{ fontSize: 13, color: "#f5c518", margin: 0, lineHeight: 1.6 }}>
+                  <strong>System requirement:</strong> Money Print ORB requires a Windows PC, or a Mac using a Windows VPS. NinjaTrader must remain open and logged in with live data at all times — if NinjaTrader is closed or logged out, the bot will not trade.
+                </p>
+              </div>
+              <p className="small" style={{ marginTop: 12 }}>
                 Users create an account first, then subscribe, then submit their Tradeify account for activation review.
               </p>
             </div>
@@ -1066,6 +1071,11 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
             <p className="lede" style={{ fontSize: 16, marginTop: 12 }}>
               Begin access to the Money Print ORB system ($499/month). Requires a funded trading account (~$120/month, paid directly to the provider) and a NinjaTrader account. Step-by-step setup guide provided after signup.
             </p>
+            <div style={{ marginTop: 14, background: "rgba(255,200,0,0.08)", border: "1px solid rgba(255,200,0,0.25)", borderRadius: 10, padding: "12px 14px" }}>
+              <p style={{ fontSize: 13, color: "#f5c518", margin: 0, lineHeight: 1.6 }}>
+                <strong>Important:</strong> This bot requires a <strong>Windows PC</strong>, or a Mac using a <strong>Windows VPS</strong>. NinjaTrader must remain open and logged in with live data at all times. If NinjaTrader is closed or logged out, the bot will stop trading.
+              </p>
+            </div>
 
             <div style={{ marginTop: 20, display: "flex", alignItems: "flex-start", gap: 10 }}>
               <input
