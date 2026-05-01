@@ -1021,13 +1021,13 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
     )}
     {activeTutorial === "ninja-connect" && (
       <TutorialPanel title="How to Connect Tradeify to NinjaTrader" steps={[
-        { n: 1, text: "Log into your Tradeify dashboard at tradeify.co. Navigate to your account details page." },
-        { n: 2, text: "Locate your connection credentials — Tradeify provides a server address, username, and password (typically for Rithmic or their broker provider)." },
-        { n: 3, text: "Open NinjaTrader. In the Control Center, go to Connections → Configure." },
-        { n: 4, text: "Click \"New\" and select the connection type that matches Tradeify's provider (e.g., Rithmic)." },
-        { n: 5, text: "Enter the server, username, and password from your Tradeify dashboard. Name the connection (e.g., \"Tradeify\")." },
-        { n: 6, text: "Click OK, then go to Connections → Connect → select your Tradeify connection." },
-        { n: 7, text: "Once connected, you should see your account balance and instruments load in the Control Center." },
+        { n: 1, text: "Open NinjaTrader. In the Control Center menu bar, go to Tools → Options (or Tools → Settings)." },
+        { n: 2, text: "In the settings window, find the \"General\" section and look for \"Enable multi-provider connections\" or \"Multi-provider connections\". Turn this ON and click OK." },
+        { n: 3, text: "Restart NinjaTrader. After restarting, the Connections menu will now be available in the Control Center." },
+        { n: 4, text: "Go to Connections → Configure. Click \"New\" and select \"Tradovate\" from the provider list (Tradeify runs on Tradovate)." },
+        { n: 5, text: "Log into your Tradeify dashboard at tradeify.co and navigate to your account. Find your Tradovate login credentials (username and password)." },
+        { n: 6, text: "Enter your Tradovate username and password in NinjaTrader. Name the connection (e.g., \"Tradeify\") and click OK." },
+        { n: 7, text: "Go to Connections → Connect → select your Tradeify connection. Once connected, your account balance and instruments will load in the Control Center." },
         { n: 8, text: "Note your Tradeify Account ID from the dashboard — you will submit this in step 5 to activate your license." },
       ]} />
     )}
