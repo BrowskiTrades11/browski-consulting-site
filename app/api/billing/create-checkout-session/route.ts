@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer_email: user.email,
+      allow_promotion_codes: true,
       line_items: [
         {
           price: process.env.STRIPE_MONEY_PRINT_ORB_PRICE_ID,
