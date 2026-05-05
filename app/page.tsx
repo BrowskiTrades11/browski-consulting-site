@@ -1053,13 +1053,14 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
     )}
     {activeTutorial === "ninja-connect" && (
       <TutorialPanel title="How to Connect Tradeify to NinjaTrader" steps={[
-        { n: 1, text: "Open NinjaTrader. In the Control Center menu bar, go to Tools → Options (or Tools → Settings)." },
-        { n: 2, text: "In the settings window, find the \"General\" section and look for \"Enable multi-provider connections\" or \"Multi-provider connections\". Turn this ON and click OK." },
-        { n: 3, text: "Restart NinjaTrader. After restarting, the Connections menu will now be available in the Control Center." },
-        { n: 4, text: "Go to Connections → Configure. Click \"New\" and select \"NinjaTrader\" from the provider list." },
-        { n: 5, text: "Enter your NinjaTrader username and password. Check \"Connect on Startup\". Under \"Account type\", select \"Simulation\". Name the connection (e.g., \"Tradeify\") and click OK." },
-        { n: 6, text: "Go to Connections → Connect → select your Tradeify connection. Once connected, your account balance and instruments will load in the Control Center." },
-        { n: 7, text: "Note your Tradeify Account ID from the dashboard — you will submit this in step 5 to activate your license." },
+        { n: 1, text: "Before connecting NinjaTrader, activate your Tradovate data feed: log into trader.tradovate.com/welcome using the credentials shown at the top of your Tradeify dashboard. Select \"Simulation\" (never \"Live\"), and sign the Non-Professional Agreement if prompted. Give it up to 15 minutes to activate, then restart NinjaTrader before continuing." },
+        { n: 2, text: "Open NinjaTrader. In the Control Center menu bar, go to Tools → Options (or Tools → Settings)." },
+        { n: 3, text: "In the settings window, find the \"General\" section and look for \"Enable multi-provider connections\" or \"Multi-provider connections\". Turn this ON and click OK." },
+        { n: 4, text: "Restart NinjaTrader. After restarting, the Connections menu will now be available in the Control Center." },
+        { n: 5, text: "Go to Connections → Configure. Click \"New\" and select \"NinjaTrader\" from the provider list." },
+        { n: 6, text: "Enter your NinjaTrader username and password. Check \"Connect on Startup\". Under \"Account type\", select \"Simulation\". Name the connection (e.g., \"Tradeify\") and click OK." },
+        { n: 7, text: "Go to Connections → Connect → select your Tradeify connection. Once connected, your account balance and instruments will load in the Control Center." },
+        { n: 8, text: "Note your Tradeify Account ID from the dashboard — you will submit this in step 5 to activate your license." },
       ]} />
     )}
     {activeTutorial === "tradeify-submit" && (
