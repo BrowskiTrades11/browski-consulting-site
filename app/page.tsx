@@ -659,9 +659,9 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
         <div className="container">
           <div className="center">
             <div className="eyebrow-secondary">Testimonials</div>
-            <h2>Positioned like a premium software product</h2>
+            <h2>What our members are saying</h2>
             <p className="lede" style={{ marginInline: "auto" }}>
-              Placeholder testimonials you can replace with real client feedback once you begin onboarding members.
+              Real feedback from traders who have gone through the activation process and put Money Print ORB to work.
             </p>
           </div>
           <div className="grid-3" style={{ marginTop: 30 }}>
