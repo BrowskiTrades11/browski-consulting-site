@@ -655,6 +655,30 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
         </div>
       </section>
 
+      <section className="section" style={{ borderTop: "1px solid var(--border)" }}>
+        <div className="container">
+          <div className="center">
+            <div className="eyebrow-secondary">Backtest Results</div>
+            <h2>$28,000+ cumulative profit — Jan to May 2026</h2>
+            <p className="lede" style={{ marginInline: "auto" }}>
+              The chart below shows Money Print ORB's simulated performance on NQ futures from January through April 2026, based on historical backtesting with the strategy's default settings.
+            </p>
+          </div>
+          <div style={{ marginTop: 28, borderRadius: 12, overflow: "hidden", border: "1px solid #333" }}>
+            <img
+              src="/backtest-results.png"
+              alt="Money Print ORB backtest cumulative profit chart Jan–May 2026"
+              style={{ width: "100%", display: "block" }}
+            />
+          </div>
+          <div style={{ marginTop: 16, padding: "14px 18px", borderRadius: 10, background: "rgba(255,200,0,0.07)", border: "1px solid rgba(255,200,0,0.25)" }}>
+            <p style={{ fontSize: 13, color: "#f5c518", margin: 0, lineHeight: 1.7 }}>
+              <strong>Important disclaimer:</strong> These results are based on historical backtesting and are provided for informational purposes only. Past performance is not indicative of future results. Backtested results do not account for slippage, commissions, or real-world execution conditions. Trading futures involves substantial risk of loss and is not suitable for all investors. You should never trade with money you cannot afford to lose.
+            </p>
+          </div>
+        </div>
+      </section>
+
       <section id="testimonials" className="section">
         <div className="container">
           <div className="center">
