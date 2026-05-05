@@ -95,10 +95,14 @@ export default function BrowskiConsultingApp() {
   });
   const [adminAccounts, setAdminAccounts] = useState<Account[]>([]);
   const [adminMessage, setAdminMessage] = useState("");
+  const [referralCode, setReferralCode] = useState("");
+  const [referralInfo, setReferralInfo] = useState<{ referralCode: string | null; referralLink: string | null } | null>(null);
   //
   useEffect(() => {
   const params = new URLSearchParams(window.location.search);
   const savedToken = localStorage.getItem("browski_token");
+  const refParam = params.get("ref");
+  if (refParam) setReferralCode(refParam.toUpperCase());
 
   if (params.get("checkout") === "success" || params.get("go") === "dashboard") {
     if (savedToken) {
@@ -204,7 +208,7 @@ async function loadAdminAccounts() {
     }
   }
 
-  async function handleRegister(form: { email: string; password: string }) {
+  async function handleRegister(form: { email: string; password: string; referralCode?: string }) {
     const data = await apiFetch("/auth/register", {
       method: "POST",
       body: JSON.stringify(form),
@@ -221,8 +225,11 @@ async function loadAdminAccounts() {
       subscriptionStatus: "Account created — subscription not started",
     }));
     setPage("dashboard");
-    setTimeout(() => {
+    setTimeout(async () => {
       loadDashboardData(headers);
+      // Load referral info for the dashboard
+      const refData = await safeApiFetch("/referral/me", { headers });
+      if (!refData?.__error) setReferralInfo(refData);
     }, 0);
   }
 
@@ -243,8 +250,10 @@ async function loadAdminAccounts() {
       subscriptionStatus: "Logged in — ready for checkout",
     }));
     setPage("dashboard");
-    setTimeout(() => {
+    setTimeout(async () => {
       loadDashboardData(headers);
+      const refData = await safeApiFetch("/referral/me", { headers });
+      if (!refData?.__error) setReferralInfo(refData);
     }, 0);
   }
 
@@ -304,7 +313,7 @@ async function loadAdminAccounts() {
   }
 
   if (page === "signup") {
-    return <SignupPage onBack={() => setPage("home")} onSubmit={handleRegister} />;
+    return <SignupPage onBack={() => setPage("home")} onSubmit={handleRegister} initialReferralCode={referralCode} />;
   }
 
   if (page === "login") {
@@ -316,6 +325,7 @@ async function loadAdminAccounts() {
       <DashboardPage
         user={user}
         dashboardState={dashboardState}
+        referralInfo={referralInfo}
         onBack={() => { localStorage.removeItem("browski_token"); setUser(null); setToken(""); setPage("home"); }}
         onTradeifySubmit={handleTradeifySubmit}
         onCheckout={handleCheckout}
@@ -625,6 +635,11 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
                   <div className="card-tight">2. Subscribe</div>
                   <div className="card-tight">3. Submit Tradeify ID</div>
                 </div>
+                <div style={{ marginTop: 16, padding: "12px 14px", borderRadius: 10, background: "rgba(127,255,0,0.07)", border: "1px solid rgba(127,255,0,0.25)" }}>
+                  <p style={{ fontSize: 14, color: "#ccc", margin: 0, lineHeight: 1.6 }}>
+                    <strong style={{ color: "#7fff00" }}>Referral program:</strong> Share your referral link and get <strong>25% off your next month</strong> for every friend who subscribes. New subscribers get <strong>25% off their first month</strong>.
+                  </p>
+                </div>
               </div>
               <div className="gradient-box">
                 <div style={{ fontSize: 14, color: ACCENT }}>Launch offer</div>
@@ -788,9 +803,10 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
   );
 }
 
-function SignupPage({ onBack, onSubmit }: any) {
+function SignupPage({ onBack, onSubmit, initialReferralCode }: any) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [referralCode, setReferralCode] = useState(initialReferralCode || "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -799,7 +815,7 @@ function SignupPage({ onBack, onSubmit }: any) {
     setError("");
     setLoading(true);
     try {
-      await onSubmit({ email, password });
+      await onSubmit({ email, password, referralCode: referralCode.trim() || undefined });
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -812,6 +828,16 @@ function SignupPage({ onBack, onSubmit }: any) {
       <form onSubmit={submit} className="form-stack">
         <input placeholder="Email" className="field" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input placeholder="Password" type="password" className="field" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <input
+          placeholder="Referral code (optional)"
+          className="field"
+          value={referralCode}
+          onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+          style={{ letterSpacing: "0.1em" }}
+        />
+        {referralCode.trim().length > 0 && (
+          <p style={{ fontSize: 13, color: "#7fff00", margin: 0 }}>Referral code applied — you'll get 25% off your first month.</p>
+        )}
         {error ? <p className="error">{error}</p> : null}
         <button type="submit" disabled={loading} className="btn btn-accent full">
           {loading ? "Creating account..." : "Register"}
@@ -893,7 +919,7 @@ function TutorialPanel({ title, steps }: { title: string; steps: { n: number; te
   );
 }
 
-function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheckout, onDownload, onCancelRequest, onRefresh, onOpenAdmin }: any) {
+function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifySubmit, onCheckout, onDownload, onCancelRequest, onRefresh, onOpenAdmin }: any) {
   const [propAccountId, setPropAccountId] = useState(dashboardState.tradeifyAccountId || "");
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
@@ -1110,6 +1136,40 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
             </div>
           </div>
         )}
+
+        {/* Referral card */}
+        <div className="card" style={{ marginTop: 26 }}>
+          <h3 style={{ fontSize: 28 }}>Refer a Friend</h3>
+          <p className="lede" style={{ fontSize: 16, marginTop: 12 }}>
+            Share your referral link. When someone signs up and subscribes using your link, <strong style={{ color: "#7fff00" }}>you get 25% off your next month</strong> and <strong style={{ color: "#7fff00" }}>they get 25% off their first month</strong> — automatically.
+          </p>
+          {referralInfo?.referralLink ? (
+            <div style={{ marginTop: 18 }}>
+              <div style={{ fontSize: 13, color: "#aaa", marginBottom: 6 }}>Your referral link</div>
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <input
+                  readOnly
+                  value={referralInfo.referralLink}
+                  className="field"
+                  style={{ fontSize: 13, color: "#7fff00", background: "rgba(127,255,0,0.07)", border: "1px solid rgba(127,255,0,0.3)", flex: 1 }}
+                  onFocus={(e) => e.target.select()}
+                />
+                <button
+                  className="btn btn-outline"
+                  style={{ flexShrink: 0, fontSize: 13, padding: "10px 16px" }}
+                  onClick={() => { navigator.clipboard.writeText(referralInfo.referralLink); }}
+                >
+                  Copy
+                </button>
+              </div>
+              <p style={{ fontSize: 12, color: "#666", marginTop: 8 }}>
+                Your code: <span style={{ color: "#7fff00", letterSpacing: "0.1em", fontWeight: 700 }}>{referralInfo.referralCode}</span>
+              </p>
+            </div>
+          ) : (
+            <p style={{ fontSize: 14, color: "#666", marginTop: 12 }}>Loading your referral link...</p>
+          )}
+        </div>
 
         <div className="grid-2" style={{ marginTop: 26 }}>
           <div className="card">

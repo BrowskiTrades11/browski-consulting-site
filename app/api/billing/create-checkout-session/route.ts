@@ -1,6 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { requireUser } from "@/lib/auth";
+import { supabaseAdmin } from "@/lib/supabase-admin";
+
+const REFERRAL_COUPON_ID = "REFER25";
+
+async function ensureReferralCoupon() {
+  try {
+    await stripe.coupons.retrieve(REFERRAL_COUPON_ID);
+  } catch {
+    await stripe.coupons.create({
+      id: REFERRAL_COUPON_ID,
+      percent_off: 25,
+      duration: "once",
+      name: "Referral — 25% off first month",
+    });
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,21 +40,41 @@ export async function POST(req: NextRequest) {
 
     const priceId = plan === "annual" ? annualPriceId! : monthlyPriceId;
 
+    // Check if this user was referred — if so, apply the 25% off first month coupon
+    const email = String(user.email || "").toLowerCase();
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("referred_by")
+      .ilike("email", email)
+      .maybeSingle();
+
+    const wasReferred = !!profile?.referred_by;
+    const discounts: { coupon: string }[] = [];
+
+    if (wasReferred) {
+      await ensureReferralCoupon();
+      discounts.push({ coupon: REFERRAL_COUPON_ID });
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer_email: user.email,
-      allow_promotion_codes: true,
+      // Only allow promo codes if the user wasn't already given a referral discount
+      allow_promotion_codes: !wasReferred,
       line_items: [
         {
           price: priceId,
           quantity: 1,
         },
       ],
+      ...(discounts.length > 0 ? { discounts } : {}),
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/?checkout=success&go=dashboard`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/?checkout=canceled`,
       metadata: {
         userId: user.id,
         botType: "MONEY_PRINT_ORB",
+        plan,
+        referredBy: profile?.referred_by || "",
       },
     });
 

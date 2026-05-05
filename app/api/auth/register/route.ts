@@ -3,10 +3,20 @@ import { supabaseAdmin } from "@/lib/supabase-admin";
 import { supabase } from "@/lib/supabase-client";
 import { sendAdminEmail } from "@/lib/email";
 
+function generateReferralCode(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 8; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
+}
+
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const email = String(body.email || "").trim().toLowerCase();
   const password = String(body.password || "").trim();
+  const referralCode = body.referralCode ? String(body.referralCode).trim().toUpperCase() : null;
 
   if (!email || !password) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -40,9 +50,31 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Generate a unique referral code for this new user and store referral relationship
+  const newReferralCode = generateReferralCode();
+  const profileUpdate: Record<string, string> = { referral_code: newReferralCode };
+
+  if (referralCode) {
+    // Verify the referral code exists before storing it
+    const { data: referrer } = await supabaseAdmin
+      .from("profiles")
+      .select("email")
+      .ilike("referral_code", referralCode)
+      .maybeSingle();
+
+    if (referrer) {
+      profileUpdate.referred_by = referralCode;
+    }
+  }
+
+  await supabaseAdmin
+    .from("profiles")
+    .update(profileUpdate)
+    .ilike("email", email);
+
   await sendAdminEmail(
     "New member registered",
-    `<p><strong>${email}</strong> just created an account.</p><p>They will need to subscribe and submit their Tradeify ID before you can approve them.</p>`
+    `<p><strong>${email}</strong> just created an account.</p><p>They will need to subscribe and submit their Tradeify ID before you can approve them.</p>${referralCode ? `<p>Referred by code: <strong>${referralCode}</strong></p>` : ""}`
   );
 
   return NextResponse.json({
