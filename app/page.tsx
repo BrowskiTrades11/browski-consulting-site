@@ -409,7 +409,7 @@ async function loadAdminAccounts() {
 
 function LandingPage({ setPage, onOpenAdmin }: any) {
   const features = [
-    "$499/month or $5,000/year — no profit split",
+    "$499/month or $5,000/year",
     "No profit split",
     "Private member dashboard",
     "Tradeify account activation workflow",
@@ -436,7 +436,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
   const faqs = [
     {
       q: "What is Money Print ORB?",
-      a: "Money Print ORB is the system offered by Browski Consulting. It is positioned as a consistency-focused automated trading solution with fixed monthly pricing.",
+      a: "Money Print ORB is a rules-based automated trading system built for consistency. It removes emotional decision-making from your trading by executing a structured, predefined strategy on NinjaTrader — no chasing trades, no revenge trading.",
     },
     {
       q: "Do you charge a profit split?",
@@ -540,7 +540,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
                 </p>
               </div>
               <p className="small" style={{ marginTop: 12 }}>
-                Users create an account first, then subscribe, then submit their Tradeify account for activation review.
+                Create your account first, subscribe, then submit your Tradeify account for activation review.
               </p>
             </div>
           </div>
@@ -642,7 +642,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
                 </div>
               </div>
               <div className="gradient-box">
-                <div style={{ fontSize: 14, color: ACCENT }}>Launch offer</div>
+                <div style={{ fontSize: 14, color: ACCENT }}>First-month guarantee</div>
                 <div style={{ fontSize: 40, fontWeight: 700, marginTop: 8 }}>Satisfaction Guaranteed!</div>
                 <p className="lede" style={{ fontSize: 16, marginTop: 10 }}>
                   Try Money Print ORB for your first month. If you're not happy with your results, we'll refund 50% of your first month — no hassle, no questions asked.
@@ -729,7 +729,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
               <div className="eyebrow-secondary">Member dashboard</div>
               <h2>A private dashboard built around activation, licensing, and onboarding</h2>
               <p className="lede">
-                Members create their account first, subscribe, then submit their Tradeify account for approval before licensed access is activated.
+                After subscribing, you submit your Tradeify account for approval. Once approved, your licensed access and onboarding are activated through your private member dashboard.
               </p>
             </div>
             <div className="grid-3">
@@ -748,7 +748,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
               <div className="eyebrow-secondary">How it works</div>
               <h2>From signup to activation in four steps</h2>
               <p className="lede">
-                The flow is built to keep the process simple for customers while keeping your licensing and approval workflow controlled.
+                The flow is designed to get you up and running as simply as possible — from account creation to licensed access in four clear steps.
               </p>
             </div>
             <div className="stack-list">
@@ -769,7 +769,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
         <div className="container">
           <div className="center">
             <div className="eyebrow-secondary">FAQ</div>
-            <h2>Clear answers to the biggest buyer questions</h2>
+            <h2>Common questions answered</h2>
           </div>
           <div className="faq-grid" style={{ marginTop: 30 }}>
             {faqs.map((faq) => (
@@ -785,9 +785,9 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
       <section className="section-tight" style={{ borderTop: "1px solid var(--border)" }}>
         <div className="container">
           <div className="card center" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0.05), rgba(127,255,0,0.10))" }}>
-            <h2>Launch Money Print ORB under Browski Consulting</h2>
+            <h2>Ready to trade with discipline?</h2>
             <p className="lede" style={{ marginInline: "auto" }}>
-              The website is aligned around one product, flexible pricing, secure licensing, Tradeify account review, and your first-month satisfaction guarantee.
+              Join Money Print ORB and get access to a structured, rules-based trading system with flexible pricing, guided onboarding, and a first-month satisfaction guarantee.
             </p>
             <div className="button-row" style={{ justifyContent: "center", marginTop: 24 }}>
               <button onClick={() => setPage("signup")} className="btn btn-accent">Create Account</button>
