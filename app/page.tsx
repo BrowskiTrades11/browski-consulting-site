@@ -637,7 +637,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
                 </div>
                 <div style={{ marginTop: 16, padding: "12px 14px", borderRadius: 10, background: "rgba(127,255,0,0.07)", border: "1px solid rgba(127,255,0,0.25)" }}>
                   <p style={{ fontSize: 14, color: "#ccc", margin: 0, lineHeight: 1.6 }}>
-                    <strong style={{ color: "#7fff00" }}>Referral program:</strong> Share your referral link and get <strong>25% off your next month</strong> for every friend who subscribes. New subscribers get <strong>25% off their first month</strong>.
+                    <strong style={{ color: "#7fff00" }}>Referral program:</strong> Refer up to 4 friends and earn 25% off your next month for each one who subscribes — refer all 4 and your next month is on us. New subscribers get <strong>25% off their first month</strong>.
                   </p>
                 </div>
               </div>
@@ -1141,7 +1141,7 @@ function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifyS
         <div className="card" style={{ marginTop: 26 }}>
           <h3 style={{ fontSize: 28 }}>Refer a Friend</h3>
           <p className="lede" style={{ fontSize: 16, marginTop: 12 }}>
-            Share your referral link. When someone signs up and subscribes using your link, <strong style={{ color: "#7fff00" }}>you get 25% off your next month</strong> and <strong style={{ color: "#7fff00" }}>they get 25% off their first month</strong> — automatically.
+            Share your referral link and earn 25% off your next month for each friend who subscribes — up to 4 referrals. Refer all 4 and your next month is completely free. Every new subscriber you refer also gets <strong style={{ color: "#7fff00" }}>25% off their first month</strong> automatically.
           </p>
           {referralInfo?.referralLink ? (
             <div style={{ marginTop: 18 }}>
