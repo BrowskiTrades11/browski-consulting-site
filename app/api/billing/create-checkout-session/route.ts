@@ -5,14 +5,24 @@ import { requireUser } from "@/lib/auth";
 export async function POST(req: NextRequest) {
   try {
     const user = await requireUser(req);
+    const body = await req.json().catch(() => ({}));
+    const plan: "monthly" | "annual" = body.plan === "annual" ? "annual" : "monthly";
 
-    if (!process.env.STRIPE_MONEY_PRINT_ORB_PRICE_ID) {
+    const monthlyPriceId = process.env.STRIPE_MONEY_PRINT_ORB_PRICE_ID;
+    const annualPriceId = process.env.STRIPE_MONEY_PRINT_ORB_ANNUAL_PRICE_ID;
+
+    if (!monthlyPriceId) {
       return NextResponse.json({ error: "Missing STRIPE_MONEY_PRINT_ORB_PRICE_ID" }, { status: 500 });
+    }
+    if (plan === "annual" && !annualPriceId) {
+      return NextResponse.json({ error: "Missing STRIPE_MONEY_PRINT_ORB_ANNUAL_PRICE_ID" }, { status: 500 });
     }
 
     if (!process.env.NEXT_PUBLIC_APP_URL) {
       return NextResponse.json({ error: "Missing NEXT_PUBLIC_APP_URL" }, { status: 500 });
     }
+
+    const priceId = plan === "annual" ? annualPriceId! : monthlyPriceId;
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -20,7 +30,7 @@ export async function POST(req: NextRequest) {
       allow_promotion_codes: true,
       line_items: [
         {
-          price: process.env.STRIPE_MONEY_PRINT_ORB_PRICE_ID,
+          price: priceId,
           quantity: 1,
         },
       ],

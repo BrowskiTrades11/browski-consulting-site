@@ -287,10 +287,11 @@ async function loadAdminAccounts() {
     }
   }
 
-  async function handleCheckout() {
+  async function handleCheckout(plan: "monthly" | "annual" = "monthly") {
     const data = await apiFetch("/billing/create-checkout-session", {
       method: "POST",
       headers: authHeaders,
+      body: JSON.stringify({ plan }),
     });
 
     if (data.url) {
@@ -499,7 +500,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
 ) : null}
             </div>
             <div className="grid-3" style={{ marginTop: 28 }}>
-              <div className="card-tight"><div className="stat">$499</div><div className="muted">Monthly flat rate</div></div>
+              <div className="card-tight"><div className="stat">$499</div><div className="muted">Monthly / $5K annual</div></div>
               <div className="card-tight"><div className="stat">0%</div><div className="muted">Profit split</div></div>
               <div className="card-tight"><div className="stat">50%</div><div className="muted">First-month guarantee</div></div>
             </div>
@@ -515,7 +516,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
                 <div className="pill" style={{ background: "rgba(127,255,0,0.15)", color: ACCENT }}>Browski Consulting</div>
               </div>
               <div className="price">$499</div>
-              <div className="muted">per month</div>
+              <div className="muted">per month — or $5,000/year (2 months free)</div>
               <ul className="feature-list">
                 {features.map((feature) => (
                   <li key={feature}>• {feature}</li>
@@ -580,7 +581,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
           </p>
 
           <div className="grid-2" style={{ marginTop: 26 }}>
-            <div className="card-tight">$499 monthly subscription</div>
+            <div className="card-tight">$499/month or $5,000/year</div>
             <div className="card-tight">No profit split</div>
             <div className="card-tight">Private dashboard access</div>
             <div className="card-tight">Tradeify account activation review</div>
@@ -590,7 +591,8 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
         <div className="cta-box">
           <div style={{ fontSize: 14, color: ACCENT }}>Subscription price</div>
           <div className="price" style={{ marginTop: 10 }}>$499</div>
-          <div className="muted">billed monthly</div>
+          <div className="muted">billed monthly — or $5,000/year</div>
+          <div style={{ fontSize: 12, color: "#7fff00", marginTop: 4 }}>Annual plan saves $988 (2 months free)</div>
 
           <button
             onClick={() => setPage("signup")}
@@ -628,7 +630,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
                 <div style={{ fontSize: 14, color: ACCENT }}>Launch offer</div>
                 <div style={{ fontSize: 40, fontWeight: 700, marginTop: 8 }}>Money Print ORB</div>
                 <p className="lede" style={{ fontSize: 16, marginTop: 10 }}>
-                  $499/month with a 50% first-month satisfaction guarantee.
+                  $499/month or $5,000/year (2 months free) — with a 50% first-month satisfaction guarantee.
                 </p>
                 <button onClick={() => setPage("signup")} className="btn btn-accent full" style={{ marginTop: 18 }}>Create Account</button>
                 <button onClick={() => setPage("login")} className="btn btn-outline full" style={{ marginTop: 10 }}>Login</button>
@@ -898,6 +900,7 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
   const [error, setError] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<"monthly" | "annual">("monthly");
   const [activeTutorial, setActiveTutorial] = useState<string | null>(null);
   const [onboarding, setOnboarding] = useState({
   tradeifyCreated: false,
@@ -1112,8 +1115,32 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
           <div className="card">
             <h3 style={{ fontSize: 28 }}>Start Subscription</h3>
             <p className="lede" style={{ fontSize: 16, marginTop: 12 }}>
-              Begin access to the Money Print ORB system ($499/month). Requires a funded trading account (~$120/month, paid directly to the provider) and a NinjaTrader account. Step-by-step setup guide provided after signup.
+              Begin access to the Money Print ORB system. Requires a funded trading account (~$120/month, paid directly to the provider) and a NinjaTrader account. Step-by-step setup guide provided after signup.
             </p>
+
+            <div style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 10 }}>
+              <div
+                onClick={() => setSelectedPlan("monthly")}
+                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: 10, border: `2px solid ${selectedPlan === "monthly" ? "#7fff00" : "#333"}`, cursor: "pointer", background: selectedPlan === "monthly" ? "rgba(127,255,0,0.07)" : "transparent" }}
+              >
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 15 }}>Monthly</div>
+                  <div style={{ fontSize: 13, color: "#aaa", marginTop: 2 }}>$499 / month</div>
+                </div>
+                <div style={{ width: 18, height: 18, borderRadius: "50%", border: `2px solid ${selectedPlan === "monthly" ? "#7fff00" : "#555"}`, background: selectedPlan === "monthly" ? "#7fff00" : "transparent", flexShrink: 0 }} />
+              </div>
+              <div
+                onClick={() => setSelectedPlan("annual")}
+                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: 10, border: `2px solid ${selectedPlan === "annual" ? "#7fff00" : "#333"}`, cursor: "pointer", background: selectedPlan === "annual" ? "rgba(127,255,0,0.07)" : "transparent" }}
+              >
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 15 }}>Annual <span style={{ fontSize: 12, background: "rgba(127,255,0,0.2)", color: "#7fff00", borderRadius: 6, padding: "2px 8px", marginLeft: 6 }}>2 months free</span></div>
+                  <div style={{ fontSize: 13, color: "#aaa", marginTop: 2 }}>$5,000 / year — save $988</div>
+                </div>
+                <div style={{ width: 18, height: 18, borderRadius: "50%", border: `2px solid ${selectedPlan === "annual" ? "#7fff00" : "#555"}`, background: selectedPlan === "annual" ? "#7fff00" : "transparent", flexShrink: 0 }} />
+              </div>
+            </div>
+
             <div style={{ marginTop: 14, background: "rgba(255,200,0,0.08)", border: "1px solid rgba(255,200,0,0.25)", borderRadius: 10, padding: "12px 14px" }}>
               <p style={{ fontSize: 13, color: "#f5c518", margin: 0, lineHeight: 1.6 }}>
                 <strong>Important:</strong> This bot requires a <strong>Windows PC</strong>, or a Mac using a <strong>Windows VPS</strong>. NinjaTrader must remain open and logged in with live data at all times. If NinjaTrader is closed or logged out, the bot will stop trading.
@@ -1137,7 +1164,7 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
               </label>
             </div>
 
-            <button onClick={onCheckout} disabled={!termsAccepted} className="btn btn-accent" style={{ marginTop: 14, opacity: termsAccepted ? 1 : 0.4, cursor: termsAccepted ? "pointer" : "not-allowed" }}>
+            <button onClick={() => onCheckout(selectedPlan)} disabled={!termsAccepted} className="btn btn-accent" style={{ marginTop: 14, opacity: termsAccepted ? 1 : 0.4, cursor: termsAccepted ? "pointer" : "not-allowed" }}>
               Open Checkout
             </button>
           </div>
