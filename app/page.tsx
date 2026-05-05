@@ -409,7 +409,7 @@ async function loadAdminAccounts() {
 
 function LandingPage({ setPage, onOpenAdmin }: any) {
   const features = [
-    "Fixed $499/month pricing",
+    "$499/month or $5,000/year — no profit split",
     "No profit split",
     "Private member dashboard",
     "Tradeify account activation workflow",
@@ -428,7 +428,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
 
   const steps = [
     "Create your Browski Consulting account",
-    "Subscribe to Money Print ORB for $499/month",
+    "Subscribe to Money Print ORB — monthly or annual plan",
     "Submit your Tradeify account for activation review",
     "Receive approval, onboarding, and licensed access",
   ];
@@ -440,7 +440,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
     },
     {
       q: "Do you charge a profit split?",
-      a: "No. Browski Consulting uses a flat $499 monthly subscription with no profit-sharing model.",
+      a: "No. Browski Consulting uses a flat subscription — $499/month or $5,000/year — with no profit-sharing model.",
     },
     {
       q: "How does account activation work?",
@@ -498,7 +498,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
             <div className="eyebrow">Browski Consulting • Money Print ORB</div>
             <h1>Premium bot access with fixed pricing, secure account activation, and no profit split.</h1>
             <p className="lede">
-              Create your member account, subscribe to Money Print ORB for $499 per month, and activate your licensed access through a private approval workflow.
+              Create your member account, subscribe to Money Print ORB, and activate your licensed access through a private approval workflow.
             </p>
             <div className="button-row" style={{ marginTop: 28 }}>
               <button onClick={() => setPage("signup")} className="btn btn-accent">Get Started</button>
@@ -551,9 +551,9 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
         <div className="container">
           <div className="center">
             <div className="eyebrow-secondary">Simple offer</div>
-            <h2>One product. One price. One clean path to activation.</h2>
+            <h2>One product. One clean path to activation.</h2>
             <p className="lede" style={{ marginInline: "auto" }}>
-              Money Print ORB is positioned as a premium, consistency-focused trading system with a clear monthly subscription model.
+              Money Print ORB is a premium, consistency-focused automated trading system with flexible pricing and no profit split.
             </p>
           </div>
           <div className="grid-3" style={{ marginTop: 32 }}>
@@ -787,7 +787,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
           <div className="card center" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0.05), rgba(127,255,0,0.10))" }}>
             <h2>Launch Money Print ORB under Browski Consulting</h2>
             <p className="lede" style={{ marginInline: "auto" }}>
-              The website is aligned around one product, one price, secure licensing, Tradeify account review, and your first-month satisfaction guarantee.
+              The website is aligned around one product, flexible pricing, secure licensing, Tradeify account review, and your first-month satisfaction guarantee.
             </p>
             <div className="button-row" style={{ justifyContent: "center", marginTop: 24 }}>
               <button onClick={() => setPage("signup")} className="btn btn-accent">Create Account</button>
@@ -1266,7 +1266,7 @@ function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifyS
               <p>To the fullest extent permitted by applicable law, Browski Consulting, its owner Trenton Dombrowski, affiliates, and partners shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, loss of capital, or loss of data, arising from your use of the Money Print ORB system or reliance on any information provided.</p>
 
               <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>5. Subscription Terms</h3>
-              <p>The Money Print ORB subscription is billed at $499 per month. Subscriptions renew automatically unless cancelled. You may request cancellation at any time through your member dashboard. A 50% refund of your first month's payment may be requested within 30 days of your initial subscription under the satisfaction guarantee, subject to review. No refunds are issued after 30 days.</p>
+              <p>The Money Print ORB subscription is available as a monthly plan ($499/month) or an annual plan ($5,000/year). Subscriptions renew automatically unless cancelled. You may request cancellation at any time through your member dashboard. A 50% refund of your first month's payment may be requested within 30 days of your initial subscription under the satisfaction guarantee, subject to review. No refunds are issued after 30 days.</p>
 
               <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>6. Account Activation</h3>
               <p>Access to the Money Print ORB bot is contingent upon approval of your Tradeify account by Browski Consulting. Browski Consulting reserves the right to deny or revoke access at its sole discretion, including in cases of misuse, violation of these terms, or fraudulent activity.</p>
