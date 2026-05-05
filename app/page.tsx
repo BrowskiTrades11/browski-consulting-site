@@ -706,9 +706,9 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
           <div className="split split-2">
             <div className="card">
               <div className="eyebrow-secondary">First-month guarantee</div>
-              <h2>Reduce hesitation with a clear satisfaction offer</h2>
+              <h2>Satisfaction Guaranteed!</h2>
               <p className="lede">
-                New members can try Money Print ORB during their first month and request a 50% refund if they are not satisfied, subject to your satisfaction guarantee review process.
+                Try Money Print ORB for your first month. If you're not satisfied with your results, you can request a 50% refund — no hassle, no questions asked.
               </p>
             </div>
             <div className="gradient-box">
