@@ -643,9 +643,9 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
               </div>
               <div className="gradient-box">
                 <div style={{ fontSize: 14, color: ACCENT }}>Launch offer</div>
-                <div style={{ fontSize: 40, fontWeight: 700, marginTop: 8 }}>Money Print ORB</div>
+                <div style={{ fontSize: 40, fontWeight: 700, marginTop: 8 }}>Satisfaction Guaranteed!</div>
                 <p className="lede" style={{ fontSize: 16, marginTop: 10 }}>
-                  $499/month or $5,000/year (2 months free) — with a 50% first-month satisfaction guarantee.
+                  Try Money Print ORB for your first month. If you're not happy with your results, we'll refund 50% of your first month — no hassle, no questions asked.
                 </p>
                 <button onClick={() => setPage("signup")} className="btn btn-accent full" style={{ marginTop: 18 }}>Create Account</button>
                 <button onClick={() => setPage("login")} className="btn btn-outline full" style={{ marginTop: 10 }}>Login</button>
