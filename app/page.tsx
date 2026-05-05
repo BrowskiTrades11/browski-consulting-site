@@ -1025,7 +1025,7 @@ function DashboardPage({ user, dashboardState, onBack, onTradeifySubmit, onCheck
   <div className="card" style={{ marginTop: 16, borderColor: "#7fff0033", background: "#0d1a0d" }}>
     {activeTutorial === "tradeify-create" && (
       <TutorialPanel title="How to Create a Tradeify Account" steps={[
-        { n: 1, text: "Go to tradeify.co and click \"Get Started\" or \"Buy a Challenge\"." },
+        { n: 1, text: "Go to tradeify.co and click \"Get Funded\"." },
         { n: 2, text: "Choose your account size and challenge type. Select the 50K Daily Select account — this is the recommended account for Money Print ORB. Before checkout, check Tradeify's homepage for a promo code — they are almost always running a discount!" },
         { n: 3, text: "Complete registration: enter your name, email, and create a password." },
         { n: 4, text: "Check your email for a verification link and confirm your account." },
