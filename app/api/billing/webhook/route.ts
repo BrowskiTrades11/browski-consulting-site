@@ -24,8 +24,13 @@ export async function POST(req: NextRequest) {
     if (event.type === "invoice.payment_succeeded") {
       const invoice = event.data.object as Stripe.Invoice;
 
-      // Only process the first invoice of a new subscription (the referred subscriber's first payment)
-      if (invoice.billing_reason === "subscription_create" && invoice.customer_email) {
+      // Process the first real payment — subscription_create fires for $0 trial invoice,
+      // subscription_cycle fires for the first actual charge after trial ends
+      if (
+        (invoice.billing_reason === "subscription_create" || invoice.billing_reason === "subscription_cycle") &&
+        invoice.customer_email &&
+        invoice.amount_paid > 0
+      ) {
         const subscriberEmail = invoice.customer_email.toLowerCase();
 
         const { data: subscriberProfile } = await supabaseAdmin
