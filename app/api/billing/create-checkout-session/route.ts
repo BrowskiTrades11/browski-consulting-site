@@ -61,6 +61,9 @@ export async function POST(req: NextRequest) {
       customer_email: user.email,
       // Only allow promo codes if the user wasn't already given a referral discount
       allow_promotion_codes: !wasReferred,
+      subscription_data: {
+        trial_period_days: 15,
+      },
       line_items: [
         {
           price: priceId,
