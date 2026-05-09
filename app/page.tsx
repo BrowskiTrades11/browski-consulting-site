@@ -197,16 +197,20 @@ async function loadAdminAccounts() {
     }));
   }
 
-    const subscriptionData = await safeApiFetch("/billing/me", {
-      method: "GET",
-      headers: headersOverride,
-    });
+    const [subscriptionData, refData] = await Promise.all([
+      safeApiFetch("/billing/me", { method: "GET", headers: headersOverride }),
+      safeApiFetch("/referral/me", { method: "GET", headers: headersOverride }),
+    ]);
 
     if (!subscriptionData?.__error) {
       setDashboardState((prev) => ({
         ...prev,
         subscriptionStatus: subscriptionData.error ? `Error: ${subscriptionData.error}` : (subscriptionData.status || prev.subscriptionStatus),
       }));
+    }
+
+    if (!refData?.__error && refData?.referralLink) {
+      setReferralInfo(refData);
     }
   }
 
