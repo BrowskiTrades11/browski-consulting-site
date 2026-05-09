@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
       .from("prop_accounts")
       .select("active, user_id")
       .ilike("prop_account_id", tradeifyId.trim())
+      .eq("active", true)
       .maybeSingle();
 
     if (error || !account) {
