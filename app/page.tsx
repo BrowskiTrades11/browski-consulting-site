@@ -294,18 +294,24 @@ async function loadAdminAccounts() {
   }
 
   async function handleCheckout(plan: "monthly" | "annual" = "monthly") {
-    const data = await apiFetch("/billing/create-checkout-session", {
-      method: "POST",
-      headers: authHeaders,
-      body: JSON.stringify({ plan }),
-    });
+    try {
+      const data = await apiFetch("/billing/create-checkout-session", {
+        method: "POST",
+        headers: authHeaders,
+        body: JSON.stringify({ plan }),
+      });
 
-    if (data.url) {
-      window.open(data.url, "_blank");
-      setDashboardState((prev) => ({
-        ...prev,
-        subscriptionStatus: "Checkout started",
-      }));
+      if (data.url) {
+        window.location.href = data.url;
+        setDashboardState((prev) => ({
+          ...prev,
+          subscriptionStatus: "Checkout started",
+        }));
+      } else {
+        alert(data.error || "Failed to start checkout. Please try again.");
+      }
+    } catch (err: any) {
+      alert(err?.message || "Failed to start checkout. Please try again.");
     }
   }
 
