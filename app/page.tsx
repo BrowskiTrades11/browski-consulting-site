@@ -211,6 +211,8 @@ async function loadAdminAccounts() {
 
     if (!refData?.__error && refData?.referralLink) {
       setReferralInfo(refData);
+    } else {
+      setReferralInfo({ referralCode: null, referralLink: null });
     }
   }
 
@@ -1228,7 +1230,9 @@ function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifyS
               </p>
             </div>
           ) : (
-            <p style={{ fontSize: 14, color: "#666", marginTop: 12 }}>Generating your referral link...</p>
+            <p style={{ fontSize: 14, color: "#666", marginTop: 12 }}>
+              Referral link unavailable — try refreshing your dashboard.
+            </p>
           )}
         </div>
 
