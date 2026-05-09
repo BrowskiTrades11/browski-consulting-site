@@ -8,9 +8,13 @@ export async function POST(req: NextRequest) {
     const user = await requireUser(req);
     const body = await req.json();
     const propAccountId = String(body.propAccountId || "").trim();
+    const name = String(body.name || "").trim();
 
     if (!propAccountId) {
       return NextResponse.json({ error: "Tradeify account ID is required" }, { status: 400 });
+    }
+    if (!name) {
+      return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
 
     const email = String(user.email || "").toLowerCase();
@@ -40,7 +44,7 @@ export async function POST(req: NextRequest) {
 
     const { data, error } = await supabaseAdmin
       .from("prop_accounts")
-      .insert({ user_id: profile.id, prop_account_id: propAccountId, active: false })
+      .insert({ user_id: profile.id, prop_account_id: propAccountId, name, active: false })
       .select()
       .single();
 
@@ -50,7 +54,7 @@ export async function POST(req: NextRequest) {
 
     await sendAdminEmail(
       "Tradeify ID submitted — approval needed",
-      `<p><strong>${email}</strong> submitted Tradeify ID: <strong>${propAccountId}</strong></p><p>Log in to the admin panel to approve or reject their account.</p>`
+      `<p><strong>${name}</strong> (${email}) submitted Tradeify ID: <strong>${propAccountId}</strong></p><p>Log in to the admin panel to approve or reject their account.</p>`
     );
 
     return NextResponse.json({

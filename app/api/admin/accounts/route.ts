@@ -32,6 +32,7 @@ export async function GET(req: NextRequest) {
     const accounts = (data || []).map((acct: any) => ({
       id: acct.id,
       prop_account_id: acct.prop_account_id,
+      name: acct.name || "",
       active: acct.active,
       created_at: acct.created_at,
       email: acct.profiles?.email || "Unknown",

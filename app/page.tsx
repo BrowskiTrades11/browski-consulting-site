@@ -141,7 +141,7 @@ async function loadAdminAccounts() {
     setAdminAccounts(
   (Array.isArray(data) ? data : []).map((acct: any) => ({
         id: acct.id,
-        fullName: acct.email || "Unknown",
+        fullName: acct.name || acct.email || "Unknown",
         email: acct.email || "No email saved",
         propAccountId: acct.prop_account_id || "Not submitted",
         submittedAt: acct.created_at,
@@ -259,11 +259,11 @@ async function loadAdminAccounts() {
     }, 0);
   }
 
-  async function handleTradeifySubmit(propAccountId: string) {
+  async function handleTradeifySubmit(propAccountId: string, name: string) {
     await apiFetch("/accounts/submit", {
       method: "POST",
       headers: authHeaders,
-      body: JSON.stringify({ propAccountId }),
+      body: JSON.stringify({ propAccountId, name }),
     });
     await loadDashboardData();
   }
@@ -942,6 +942,7 @@ function TutorialPanel({ title, steps }: { title: string; steps: { n: number; te
 
 function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifySubmit, onCheckout, onDownload, onCancelRequest, onRefresh, onOpenAdmin }: any) {
   const [propAccountId, setPropAccountId] = useState(dashboardState.tradeifyAccountId || "");
+  const [accountName, setAccountName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -968,8 +969,9 @@ function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifyS
     setMessage("");
     setError("");
     try {
-      await onTradeifySubmit(propAccountId);
+      await onTradeifySubmit(propAccountId, accountName);
       setPropAccountId("");
+      setAccountName("");
       setMessage("Tradeify account submitted for review.");
     } catch (err: any) {
       setError(err.message);
@@ -1272,6 +1274,7 @@ function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifyS
               </div>
             )}
             <form onSubmit={submitAccount} className="form-stack" style={{ marginTop: 18 }}>
+              <input placeholder="Your full name" className="field" value={accountName} onChange={(e) => setAccountName(e.target.value)} />
               <input placeholder="Tradeify account ID" className="field" value={propAccountId} onChange={(e) => setPropAccountId(e.target.value)} />
               {message ? <p className="success">{message}</p> : null}
               {error ? <p className="error">{error}</p> : null}
