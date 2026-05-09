@@ -47,13 +47,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ valid: false, reason: "No active subscription" });
     }
 
-    const subscriptions = await stripe.subscriptions.list({
-      customer: customers.data[0].id,
-      status: "active",
-      limit: 1,
-    });
+    const [activeSubs, trialingSubs] = await Promise.all([
+      stripe.subscriptions.list({ customer: customers.data[0].id, status: "active", limit: 1 }),
+      stripe.subscriptions.list({ customer: customers.data[0].id, status: "trialing", limit: 1 }),
+    ]);
 
-    if (subscriptions.data.length === 0) {
+    if (activeSubs.data.length === 0 && trialingSubs.data.length === 0) {
       return NextResponse.json({ valid: false, reason: "Subscription inactive or cancelled" });
     }
 
