@@ -7,27 +7,34 @@ export async function GET(req: NextRequest) {
     const user = await requireUser(req);
     const email = String(user.email || "").toLowerCase();
 
-    const { data, error } = await supabaseAdmin
+    const { data: profile, error: profileError } = await supabaseAdmin
       .from("profiles")
-      .select("*")
+      .select("id, cancellation_requested")
       .ilike("email", email)
       .maybeSingle();
+
+    if (profileError || !profile) {
+      return NextResponse.json({ accounts: [] });
+    }
+
+    const { data: accounts, error } = await supabaseAdmin
+      .from("prop_accounts")
+      .select("*")
+      .eq("user_id", profile.id)
+      .order("created_at", { ascending: false });
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    if (!data || !data.prop_account_id) {
-      return NextResponse.json({ accounts: [] });
-    }
-
     return NextResponse.json({
-      accounts: [{
-        propAccountId: data.prop_account_id,
-        approvalStatus: data.active ? "approved" : "pending",
-        licenseKey: data.active ? data.prop_account_id : null,
-        cancellationRequested: data.cancellation_requested || false,
-      }],
+      accounts: (accounts || []).map((acct: any) => ({
+        id: acct.id,
+        propAccountId: acct.prop_account_id,
+        approvalStatus: acct.active ? "approved" : "pending",
+        licenseKey: acct.active ? acct.prop_account_id : null,
+        cancellationRequested: profile.cancellation_requested || false,
+      })),
     });
   } catch {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

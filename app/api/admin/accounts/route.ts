@@ -10,8 +10,8 @@ export async function GET(req: NextRequest) {
     const status = searchParams.get("status");
 
     let query = supabaseAdmin
-      .from("profiles")
-      .select("*")
+      .from("prop_accounts")
+      .select("*, profiles(email, cancellation_requested)")
       .order("created_at", { ascending: false });
 
     if (status === "pending") {
@@ -19,7 +19,6 @@ export async function GET(req: NextRequest) {
     } else if (status === "approved") {
       query = query.eq("active", true);
     }
-    // status === "all" or anything else returns everything
 
     const { data, error } = await query;
 
@@ -30,7 +29,16 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    return NextResponse.json(data || []);
+    const accounts = (data || []).map((acct: any) => ({
+      id: acct.id,
+      prop_account_id: acct.prop_account_id,
+      active: acct.active,
+      created_at: acct.created_at,
+      email: acct.profiles?.email || "Unknown",
+      cancellation_requested: acct.profiles?.cancellation_requested || false,
+    }));
+
+    return NextResponse.json(accounts);
   } catch (err: any) {
     return NextResponse.json(
       { error: err?.message || "Forbidden" },

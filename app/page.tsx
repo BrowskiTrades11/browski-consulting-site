@@ -140,7 +140,7 @@ async function loadAdminAccounts() {
 
     setAdminAccounts(
   (Array.isArray(data) ? data : []).map((acct: any) => ({
-        id: acct.email,
+        id: acct.id,
         fullName: acct.email || "Unknown",
         email: acct.email || "No email saved",
         propAccountId: acct.prop_account_id || "Not submitted",
@@ -183,15 +183,17 @@ async function loadAdminAccounts() {
     isAdmin: adminData.isAdmin,
   }));
 
-  if (!accountData?._error && Array.isArray(accountData.accounts) && accountData.accounts.length > 0) {
-    const account = accountData.accounts[0];
+  if (!accountData?._error && Array.isArray(accountData.accounts)) {
+    const accounts = accountData.accounts;
+    const primary = accounts.find((a: any) => a.approvalStatus === "approved") || accounts[0];
 
     setDashboardState((prev) => ({
       ...prev,
-      tradeifyAccountId: account.propAccountId || "",
-      approvalStatus: account.approvalStatus || prev.approvalStatus,
-      licenseKey: account.licenseKey || prev.licenseKey,
-      cancellationRequested: account.cancellationRequested || false,
+      accounts: accounts,
+      tradeifyAccountId: primary?.propAccountId || "",
+      approvalStatus: primary?.approvalStatus || prev.approvalStatus,
+      licenseKey: primary?.licenseKey || prev.licenseKey,
+      cancellationRequested: primary?.cancellationRequested || false,
     }));
   }
 
@@ -258,18 +260,13 @@ async function loadAdminAccounts() {
   }
 
   async function handleTradeifySubmit(propAccountId: string) {
-  const data = await apiFetch("/accounts/submit", {
-    method: "POST",
-    headers: authHeaders,
-    body: JSON.stringify({ propAccountId }),
-  });
-
-  setDashboardState((prev) => ({
-    ...prev,
-    tradeifyAccountId: data.account.propAccountId,
-    approvalStatus: data.account.approvalStatus,
-  }));
-}
+    await apiFetch("/accounts/submit", {
+      method: "POST",
+      headers: authHeaders,
+      body: JSON.stringify({ propAccountId }),
+    });
+    await loadDashboardData();
+  }
 
   async function handleCancelRequest() {
     await apiFetch("/accounts/cancel-request", {
@@ -972,6 +969,7 @@ function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifyS
     setError("");
     try {
       await onTradeifySubmit(propAccountId);
+      setPropAccountId("");
       setMessage("Tradeify account submitted for review.");
     } catch (err: any) {
       setError(err.message);
@@ -1256,8 +1254,23 @@ function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifyS
           <div className="card">
             <h3 style={{ fontSize: 28 }}>Submit Tradeify Account</h3>
             <p className="lede" style={{ fontSize: 16, marginTop: 12 }}>
-              Enter your Tradeify account ID to request activation review.
+              Enter your Tradeify account ID to request activation review. You can submit additional accounts (e.g. after passing a combine).
             </p>
+            {dashboardState.accounts && dashboardState.accounts.length > 0 && (
+              <div style={{ marginTop: 16 }}>
+                <div style={{ fontSize: 13, color: "#aaa", marginBottom: 8 }}>Submitted accounts</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {dashboardState.accounts.map((acct: any) => (
+                    <div key={acct.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", borderRadius: 8, background: "rgba(255,255,255,0.04)", border: "1px solid #333" }}>
+                      <span style={{ fontSize: 14, fontFamily: "monospace", color: "#fff" }}>{acct.propAccountId}</span>
+                      <span style={{ fontSize: 12, padding: "3px 10px", borderRadius: 20, background: acct.approvalStatus === "approved" ? "rgba(127,255,0,0.15)" : "rgba(255,200,0,0.1)", color: acct.approvalStatus === "approved" ? "#7fff00" : "#f5c518", fontWeight: 600 }}>
+                        {acct.approvalStatus}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             <form onSubmit={submitAccount} className="form-stack" style={{ marginTop: 18 }}>
               <input placeholder="Tradeify account ID" className="field" value={propAccountId} onChange={(e) => setPropAccountId(e.target.value)} />
               {message ? <p className="success">{message}</p> : null}

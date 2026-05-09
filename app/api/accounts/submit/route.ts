@@ -15,10 +15,32 @@ export async function POST(req: NextRequest) {
 
     const email = String(user.email || "").toLowerCase();
 
-    const { data, error } = await supabaseAdmin
+    // Get the user's profile id
+    const { data: profile, error: profileError } = await supabaseAdmin
       .from("profiles")
-      .update({ prop_account_id: propAccountId })
+      .select("id")
       .ilike("email", email)
+      .maybeSingle();
+
+    if (profileError || !profile) {
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+    }
+
+    // Prevent duplicate submissions of the same ID
+    const { data: existing } = await supabaseAdmin
+      .from("prop_accounts")
+      .select("id")
+      .eq("user_id", profile.id)
+      .ilike("prop_account_id", propAccountId)
+      .maybeSingle();
+
+    if (existing) {
+      return NextResponse.json({ error: "This Tradeify account ID has already been submitted" }, { status: 400 });
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from("prop_accounts")
+      .insert({ user_id: profile.id, prop_account_id: propAccountId, active: false })
       .select()
       .single();
 
@@ -33,8 +55,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       account: {
+        id: data.id,
         propAccountId: data.prop_account_id,
-        approvalStatus: data.active ? "approved" : "pending",
+        approvalStatus: "pending",
       },
     });
   } catch {

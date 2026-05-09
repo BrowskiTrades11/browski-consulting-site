@@ -10,17 +10,16 @@ export async function POST(
     await requireAdmin(req);
 
     const { id } = await context.params;
-    const email = decodeURIComponent(id);
 
-    if (!email) {
-      return NextResponse.json({ error: "Missing account identifier" }, { status: 400 });
+    if (!id) {
+      return NextResponse.json({ error: "Missing account ID" }, { status: 400 });
     }
 
     const { data, error } = await supabaseAdmin
-      .from("profiles")
+      .from("prop_accounts")
       .update({ active: false })
-      .ilike("email", email)
-      .select("*")
+      .eq("id", id)
+      .select()
       .single();
 
     if (error) {
@@ -28,10 +27,3 @@ export async function POST(
     }
 
     return NextResponse.json({ success: true, account: data });
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: err?.message || "Reject failed" },
-      { status: 403 }
-    );
-  }
-}
