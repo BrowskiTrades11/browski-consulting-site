@@ -27,3 +27,10 @@ export async function POST(
     }
 
     return NextResponse.json({ success: true, account: data });
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: err?.message || "Reject failed" },
+      { status: 403 }
+    );
+  }
+}
