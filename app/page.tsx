@@ -233,6 +233,9 @@ async function loadAdminAccounts() {
       subscriptionStatus: "Account created — subscription not started",
     }));
     setPage("dashboard");
+    if (typeof window !== "undefined" && (window as any).fbq) {
+      (window as any).fbq("track", "CompleteRegistration");
+    }
     setTimeout(async () => {
       loadDashboardData(headers);
       // Load referral info for the dashboard
