@@ -999,10 +999,34 @@ function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifyS
 
         <div className="grid-4">
           <StatusCard title="Subscription" value={dashboardState.subscriptionStatus} />
-          <StatusCard title="Tradeify Account" value={dashboardState.tradeifyAccountId || "Not submitted"} />
+          <StatusCard title="Accounts Submitted" value={dashboardState.accounts?.length || (dashboardState.tradeifyAccountId ? 1 : 0)} />
           <StatusCard title="Approval Status" value={dashboardState.approvalStatus} />
-          <StatusCard title="Tradeify License" value={dashboardState.licenseKey || (dashboardState.approvalStatus === "approved" ? dashboardState.tradeifyAccountId : "Available after approval")} />
+          <StatusCard title="Accounts Approved" value={dashboardState.accounts?.filter((a: any) => a.approvalStatus === "approved").length || (dashboardState.approvalStatus === "approved" ? 1 : 0)} />
         </div>
+
+        {(() => {
+          const approvedAccounts = dashboardState.accounts?.filter((a: any) => a.approvalStatus === "approved") || [];
+          if (approvedAccounts.length === 0) return null;
+          return (
+            <div className="card" style={{ marginTop: 16 }}>
+              <div style={{ fontSize: 13, color: "#aaa", marginBottom: 10 }}>
+                {approvedAccounts.length > 1
+                  ? "NinjaTrader License Keys — enter each ID into its corresponding bot instance"
+                  : "NinjaTrader License Key — enter this ID into the License section of your bot"}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {approvedAccounts.map((acct: any, i: number) => (
+                  <div key={acct.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", borderRadius: 8, background: "rgba(127,255,0,0.05)", border: "1px solid rgba(127,255,0,0.2)" }}>
+                    {approvedAccounts.length > 1 && (
+                      <span style={{ fontSize: 12, color: "#aaa", minWidth: 70 }}>Bot instance {i + 1}</span>
+                    )}
+                    <span style={{ fontSize: 15, fontFamily: "monospace", color: "#7fff00", fontWeight: 700, flex: 1 }}>{acct.propAccountId}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
 
         <div className="card" style={{ marginTop: 26 }}>
   <h3 style={{ fontSize: 28 }}>Onboarding Guide</h3>
