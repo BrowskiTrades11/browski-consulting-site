@@ -524,6 +524,9 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
               </div>
               <div className="price">$499</div>
               <div className="muted">per month — or $5,000/year (2 months free)</div>
+              <div style={{ marginTop: 14, marginBottom: 4, background: "rgba(127,255,0,0.08)", border: "1px solid rgba(127,255,0,0.25)", borderRadius: 10, padding: "10px 14px" }}>
+                <p style={{ fontSize: 13, color: "#7fff00", margin: 0, fontWeight: 600 }}>✓ 15-day free trial on monthly plan — no charge until your trial ends</p>
+              </div>
               <ul className="feature-list">
                 {features.map((feature) => (
                   <li key={feature}>• {feature}</li>
@@ -1215,7 +1218,7 @@ function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifyS
               </p>
             </div>
           ) : (
-            <p style={{ fontSize: 14, color: "#666", marginTop: 12 }}>Loading your referral link...</p>
+            <p style={{ fontSize: 14, color: "#666", marginTop: 12 }}>Generating your referral link...</p>
           )}
         </div>
 

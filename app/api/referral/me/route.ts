@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireUser } from "@/lib/auth";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 
+function generateReferralCode(): string {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 8; i++) {
+    code += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return code;
+}
+
 export async function GET(req: NextRequest) {
   try {
     const user = await requireUser(req);
@@ -17,9 +26,19 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    const referralCode = data?.referral_code || null;
+    let referralCode = data?.referral_code || null;
+
+    // Auto-generate a code for existing users who don't have one yet
+    if (!referralCode) {
+      referralCode = generateReferralCode();
+      await supabaseAdmin
+        .from("profiles")
+        .update({ referral_code: referralCode })
+        .ilike("email", email);
+    }
+
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || "";
-    const referralLink = referralCode ? `${appUrl}/?ref=${referralCode}` : null;
+    const referralLink = `${appUrl}/?ref=${referralCode}`;
 
     return NextResponse.json({
       referralCode,
