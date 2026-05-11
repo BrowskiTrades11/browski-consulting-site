@@ -19,13 +19,14 @@ export async function GET(req: NextRequest) {
 
     const customer = customers.data[0];
 
-    const subscriptions = await stripe.subscriptions.list({
-      customer: customer.id,
-      status: "active",
-      limit: 1,
-    });
+    const [activeSubs, trialingSubs] = await Promise.all([
+      stripe.subscriptions.list({ customer: customer.id, status: "active", limit: 1 }),
+      stripe.subscriptions.list({ customer: customer.id, status: "trialing", limit: 1 }),
+    ]);
 
-    if (subscriptions.data.length === 0) {
+    const subscription = activeSubs.data[0] || trialingSubs.data[0];
+
+    if (!subscription) {
       return NextResponse.json({
         status: "inactive",
         botType: "MONEY_PRINT_ORB",
@@ -34,10 +35,8 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const subscription = subscriptions.data[0];
-
     return NextResponse.json({
-      status: "active",
+      status: subscription.status === "trialing" ? "Trial active" : "active",
       botType: "MONEY_PRINT_ORB",
       priceMonthlyUsd: 499,
       currentPeriodEnd: null,
