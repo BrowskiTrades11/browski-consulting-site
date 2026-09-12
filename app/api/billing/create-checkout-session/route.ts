@@ -59,8 +59,8 @@ export async function POST(req: NextRequest) {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       customer_email: user.email,
-      // Only allow promo codes if the user wasn't already given a referral discount
-      allow_promotion_codes: !wasReferred,
+      // allow_promotion_codes and discounts are mutually exclusive for Stripe — only send one
+      ...(wasReferred ? {} : { allow_promotion_codes: true }),
       subscription_data: {
         ...(plan === "monthly" ? { trial_period_days: 15 } : {}),
       },
