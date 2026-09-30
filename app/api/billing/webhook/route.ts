@@ -24,31 +24,6 @@ export async function POST(req: NextRequest) {
     if (event.type === "invoice.payment_succeeded") {
       const invoice = event.data.object as Stripe.Invoice;
 
-      // After the paid $49 introductory period is created, switch the subscription's
-      // next recurring price to $199/month. proration_behavior=none preserves the
-      // full paid 7-day introductory period and avoids an immediate extra charge.
-      if (invoice.billing_reason === "subscription_create" && invoice.amount_paid > 0) {
-        const subscriptionId =
-          typeof invoice.subscription === "string" ? invoice.subscription : invoice.subscription?.id;
-
-        if (subscriptionId) {
-          const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-          const renewalPriceId = subscription.metadata?.monthlyRenewalPriceId;
-
-          if (renewalPriceId && subscription.items.data[0]?.id) {
-            // Anchor the renewal exactly 7 days after the introductory purchase.
-            // Changing a 7-day recurring item to a monthly item without resetting
-            // the anchor can leave the first $199 invoice on the old weekly cycle.
-            const sevenDaysFromStart = subscription.current_period_end;
-            await stripe.subscriptions.update(subscriptionId, {
-              items: [{ id: subscription.items.data[0].id, price: renewalPriceId }],
-              proration_behavior: "none",
-              billing_cycle_anchor: sevenDaysFromStart,
-            });
-          }
-        }
-      }
-
       // Process the first real payment — subscription_create fires for $0 trial invoice,
       // subscription_cycle fires for the first actual charge after trial ends
       if (
