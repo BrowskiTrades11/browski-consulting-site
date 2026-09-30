@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({
         status: "inactive",
         botType: "MONEY_PRINT_ORB",
-        priceMonthlyUsd: 499,
+        priceMonthlyUsd: 199,
         currentPeriodEnd: null,
       });
     }
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({
         status: "inactive",
         botType: "MONEY_PRINT_ORB",
-        priceMonthlyUsd: 499,
+        priceMonthlyUsd: 199,
         currentPeriodEnd: null,
       });
     }
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       status: subscription.status === "trialing" ? "Trial active" : "active",
       botType: "MONEY_PRINT_ORB",
-      priceMonthlyUsd: 499,
+      priceMonthlyUsd: 199,
       currentPeriodEnd: null,
     });
   } catch (err: any) {
