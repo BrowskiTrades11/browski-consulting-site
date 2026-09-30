@@ -63,7 +63,6 @@ export async function POST(req: NextRequest) {
       // allow_promotion_codes and discounts are mutually exclusive for Stripe — only send one
       ...(wasReferred ? {} : { allow_promotion_codes: true }),
       subscription_data: {
-        ...(plan === "monthly" ? { trial_period_days: 7 } : {}),
         metadata: {
           plan,
           introFeePaid: plan === "monthly" ? "49" : "",
@@ -71,7 +70,6 @@ export async function POST(req: NextRequest) {
       },
       line_items: plan === "monthly"
         ? [
-            { price: monthlyRenewalPriceId, quantity: 1 },
             { price: introFeePriceId, quantity: 1 },
           ]
         : [{ price: priceId, quantity: 1 }],
