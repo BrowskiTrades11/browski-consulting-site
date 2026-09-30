@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     // Live introductory and renewal prices. Stripe Price IDs are public identifiers, not secrets.
     // Monthly checkout charges $49 for the first 7 days; the webhook then switches
     // the subscription to the $199/month renewal price without prorating the intro period.
-    const introPriceId = "price_1ULSSC1r1QnMfR7TcsHeSuSA";
+    const introFeePriceId = "price_1ULT011r1QnMfR7TWX6Ey8tE";
     const monthlyRenewalPriceId = "price_1ULSS71r1QnMfR7T0VZ3IGLH";
     const annualPriceId = process.env.STRIPE_MONEY_PRINT_ORB_ANNUAL_PRICE_ID;
 
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing NEXT_PUBLIC_APP_URL" }, { status: 500 });
     }
 
-    const priceId = plan === "annual" ? annualPriceId! : introPriceId;
+    const priceId = plan === "annual" ? annualPriceId! : monthlyRenewalPriceId;
 
     // Check if this user was referred — if so, apply the 25% off first month coupon
     const email = String(user.email || "").toLowerCase();
@@ -63,17 +63,18 @@ export async function POST(req: NextRequest) {
       // allow_promotion_codes and discounts are mutually exclusive for Stripe — only send one
       ...(wasReferred ? {} : { allow_promotion_codes: true }),
       subscription_data: {
+        ...(plan === "monthly" ? { trial_period_days: 7 } : {}),
         metadata: {
           plan,
-          monthlyRenewalPriceId: plan === "monthly" ? monthlyRenewalPriceId : "",
+          introFeePaid: plan === "monthly" ? "49" : "",
         },
       },
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
+      line_items: plan === "monthly"
+        ? [
+            { price: monthlyRenewalPriceId, quantity: 1 },
+            { price: introFeePriceId, quantity: 1 },
+          ]
+        : [{ price: priceId, quantity: 1 }],
       ...(discounts.length > 0 ? { discounts } : {}),
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/?checkout=success&go=dashboard`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/?checkout=canceled`,
