@@ -24,6 +24,26 @@ export async function POST(req: NextRequest) {
     if (event.type === "invoice.payment_succeeded") {
       const invoice = event.data.object as Stripe.Invoice;
 
+      // After the paid $49 introductory period is created, switch the subscription's
+      // next recurring price to $199/month. proration_behavior=none preserves the
+      // full paid 7-day introductory period and avoids an immediate extra charge.
+      if (invoice.billing_reason === "subscription_create" && invoice.amount_paid > 0) {
+        const subscriptionId =
+          typeof invoice.subscription === "string" ? invoice.subscription : invoice.subscription?.id;
+
+        if (subscriptionId) {
+          const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+          const renewalPriceId = subscription.metadata?.monthlyRenewalPriceId;
+
+          if (renewalPriceId && subscription.items.data[0]?.id) {
+            await stripe.subscriptions.update(subscriptionId, {
+              items: [{ id: subscription.items.data[0].id, price: renewalPriceId }],
+              proration_behavior: "none",
+            });
+          }
+        }
+      }
+
       // Process the first real payment — subscription_create fires for $0 trial invoice,
       // subscription_cycle fires for the first actual charge after trial ends
       if (
@@ -71,8 +91,8 @@ export async function POST(req: NextRequest) {
 
               if (customers.data.length > 0) {
                 const referrerCustomerId = customers.data[0].id;
-                // Apply a 25% credit (~$124.75) to the referrer's balance for their next invoice
-                const creditAmount = Math.round(499 * 0.25 * 100); // in cents
+                // Apply a 25% credit based on the current $199 monthly renewal price.
+                const creditAmount = Math.round(199 * 0.25 * 100); // in cents
                 await stripe.customers.createBalanceTransaction(referrerCustomerId, {
                   amount: -creditAmount,
                   currency: "usd",
