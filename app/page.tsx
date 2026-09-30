@@ -537,10 +537,10 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
                 </div>
                 <div className="pill" style={{ background: "rgba(127,255,0,0.15)", color: ACCENT }}>Browski Consulting</div>
               </div>
-              <div className="price">$499</div>
-              <div className="muted">per month — or $199/month (2 months free)</div>
+              <div className="price">$49</div>
+              <div className="muted">for your first 7 days — then $199/month</div>
               <div style={{ marginTop: 14, marginBottom: 4, background: "rgba(127,255,0,0.08)", border: "1px solid rgba(127,255,0,0.25)", borderRadius: 10, padding: "10px 14px" }}>
-                <p style={{ fontSize: 13, color: "#7fff00", margin: 0, fontWeight: 600 }}>✓ 15-day free trial on monthly plan — no charge until your trial ends</p>
+                <p style={{ fontSize: 13, color: "#7fff00", margin: 0, fontWeight: 600 }}>✓ $49 today for 7 days of access — then automatically $199/month until canceled</p>
               </div>
               <ul className="feature-list">
                 {features.map((feature) => (
