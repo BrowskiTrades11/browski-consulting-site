@@ -435,7 +435,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
     "Approval status",
     "License key access",
     "Setup instructions",
-    "Support and refund request form",
+    "Support request form",
   ];
 
   const steps = [
@@ -522,9 +522,9 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
 ) : null}
             </div>
             <div className="grid-3" style={{ marginTop: 28 }}>
-              <div className="card-tight"><div className="stat">$499</div><div className="muted">Monthly / $5K annual</div></div>
+              <div className="card-tight"><div className="stat">$49</div><div className="muted">First 7 days</div></div>
               <div className="card-tight"><div className="stat">0%</div><div className="muted">Profit split</div></div>
-              <div className="card-tight"><div className="stat">50%</div><div className="muted">First-month guarantee</div></div>
+              <div className="card-tight"><div className="stat">$199</div><div className="muted">Monthly after 7 days</div></div>
             </div>
           </div>
 
@@ -615,9 +615,8 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
 
         <div className="cta-box">
           <div style={{ fontSize: 14, color: ACCENT }}>Subscription price</div>
-          <div className="price" style={{ marginTop: 10 }}>$499</div>
-          <div className="muted">billed monthly — or $199/month</div>
-          <div style={{ fontSize: 12, color: "#7fff00", marginTop: 4 }}>Annual plan saves $988 (2 months free)</div>
+          <div className="price" style={{ marginTop: 10 }}>$49</div>
+          <div className="muted">for your first 7 days — then $199/month</div>
 
           <button
             onClick={() => setPage("signup")}
@@ -656,15 +655,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
                   </p>
                 </div>
               </div>
-              <div className="gradient-box">
-                <div style={{ fontSize: 14, color: ACCENT }}>First-month guarantee</div>
-                <div style={{ fontSize: 40, fontWeight: 700, marginTop: 8 }}>Satisfaction Guaranteed!</div>
-                <p className="lede" style={{ fontSize: 16, marginTop: 10 }}>
-                  Try Money Print ORB for your first month. If you're not happy with your results, we'll refund 50% of your first month — no hassle, no questions asked.
-                </p>
-                <button onClick={() => setPage("signup")} className="btn btn-accent full" style={{ marginTop: 18 }}>Create Account</button>
-                <button onClick={() => setPage("login")} className="btn btn-outline full" style={{ marginTop: 10 }}>Login</button>
-              </div>
+              <div className="gradient-box"><div style={{ fontSize: 14, color: ACCENT }}>Simple subscription</div><div style={{ fontSize: 40, fontWeight: 700, marginTop: 8 }}>$49 for 7 days</div><p className="lede" style={{ fontSize: 16, marginTop: 10 }}>Continue after the introductory period for $199/month. Cancel anytime through your member dashboard.</p><button onClick={() => setPage("signup")} className="btn btn-accent full" style={{ marginTop: 18 }}>Create Account</button><button onClick={() => setPage("login")} className="btn btn-outline full" style={{ marginTop: 10 }}>Login</button></div>
             </div>
           </div>
         </div>
@@ -740,27 +731,6 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
         </div>
       </section>
 
-      <section id="guarantee" className="section">
-        <div className="container">
-          <div className="split split-2">
-            <div className="card">
-              <div className="eyebrow-secondary">First-month guarantee</div>
-              <h2>Satisfaction Guaranteed!</h2>
-              <p className="lede">
-                Try Money Print ORB for your first month. If you're not satisfied with your results, you can request a 50% refund — no hassle, no questions asked.
-              </p>
-            </div>
-            <div className="gradient-box">
-              <div className="eyebrow-secondary" style={{ marginBottom: 10 }}>Guarantee summary</div>
-              <div style={{ fontSize: 30, fontWeight: 700 }}>50% back in month one</div>
-              <p className="lede" style={{ fontSize: 16, marginTop: 12 }}>
-                This is an opportunity, not a promise of profits.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section id="dashboard" className="section" style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", background: "rgba(255,255,255,0.03)" }}>
         <div className="container">
           <div className="split split-2">
@@ -826,7 +796,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
           <div className="card center" style={{ background: "linear-gradient(90deg, rgba(255,255,255,0.05), rgba(127,255,0,0.10))" }}>
             <h2>Ready to trade with discipline?</h2>
             <p className="lede" style={{ marginInline: "auto" }}>
-              Join Money Print ORB and get access to a structured, rules-based trading system with flexible pricing, guided onboarding, and a first-month satisfaction guarantee.
+              Join Money Print ORB and get access to a structured, rules-based trading system with straightforward pricing and guided onboarding.
             </p>
             <div className="button-row" style={{ justifyContent: "center", marginTop: 24 }}>
               <button onClick={() => setPage("signup")} className="btn btn-accent">Create Account</button>
@@ -1253,19 +1223,9 @@ function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifyS
               >
                 <div>
                   <div style={{ fontWeight: 700, fontSize: 15 }}>Monthly</div>
-                  <div style={{ fontSize: 13, color: "#aaa", marginTop: 2 }}>$499 / month</div>
+                  <div style={{ fontSize: 13, color: "#aaa", marginTop: 2 }}>$49 for 7 days, then $199 / month</div>
                 </div>
                 <div style={{ width: 18, height: 18, borderRadius: "50%", border: `2px solid ${selectedPlan === "monthly" ? "#7fff00" : "#555"}`, background: selectedPlan === "monthly" ? "#7fff00" : "transparent", flexShrink: 0 }} />
-              </div>
-              <div
-                onClick={() => setSelectedPlan("annual")}
-                style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 16px", borderRadius: 10, border: `2px solid ${selectedPlan === "annual" ? "#7fff00" : "#333"}`, cursor: "pointer", background: selectedPlan === "annual" ? "rgba(127,255,0,0.07)" : "transparent" }}
-              >
-                <div>
-                  <div style={{ fontWeight: 700, fontSize: 15 }}>Annual <span style={{ fontSize: 12, background: "rgba(127,255,0,0.2)", color: "#7fff00", borderRadius: 6, padding: "2px 8px", marginLeft: 6 }}>2 months free</span></div>
-                  <div style={{ fontSize: 13, color: "#aaa", marginTop: 2 }}>$5,000 / year — save $988</div>
-                </div>
-                <div style={{ width: 18, height: 18, borderRadius: "50%", border: `2px solid ${selectedPlan === "annual" ? "#7fff00" : "#555"}`, background: selectedPlan === "annual" ? "#7fff00" : "transparent", flexShrink: 0 }} />
               </div>
             </div>
 
@@ -1350,7 +1310,7 @@ function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifyS
               <p>To the fullest extent permitted by applicable law, Browski Consulting, its owner Trenton Dombrowski, affiliates, and partners shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, loss of capital, or loss of data, arising from your use of the Money Print ORB system or reliance on any information provided.</p>
 
               <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>5. Subscription Terms</h3>
-              <p>The Money Print ORB subscription is available as a monthly plan ($199/month) or an annual plan ($199/month). Subscriptions renew automatically unless cancelled. You may request cancellation at any time through your member dashboard. A 50% refund of your first month's payment may be requested within 30 days of your initial subscription under the satisfaction guarantee, subject to review. No refunds are issued after 30 days.</p>
+              <p>Money Print ORB costs $49 for the first 7 days and then automatically renews at $199/month until cancelled. You may request cancellation at any time through your member dashboard. Payments are non-refundable except where required by law.</p>
 
               <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>6. Account Activation</h3>
               <p>Access to the Money Print ORB bot is contingent upon approval of your Tradeify account by Browski Consulting. Browski Consulting reserves the right to deny or revoke access at its sole discretion, including in cases of misuse, violation of these terms, or fraudulent activity.</p>
