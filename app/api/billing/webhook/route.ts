@@ -36,9 +36,14 @@ export async function POST(req: NextRequest) {
           const renewalPriceId = subscription.metadata?.monthlyRenewalPriceId;
 
           if (renewalPriceId && subscription.items.data[0]?.id) {
+            // Anchor the renewal exactly 7 days after the introductory purchase.
+            // Changing a 7-day recurring item to a monthly item without resetting
+            // the anchor can leave the first $199 invoice on the old weekly cycle.
+            const sevenDaysFromStart = subscription.current_period_end;
             await stripe.subscriptions.update(subscriptionId, {
               items: [{ id: subscription.items.data[0].id, price: renewalPriceId }],
               proration_behavior: "none",
+              billing_cycle_anchor: sevenDaysFromStart,
             });
           }
         }
