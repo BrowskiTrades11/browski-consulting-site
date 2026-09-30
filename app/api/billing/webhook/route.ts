@@ -15,6 +15,12 @@ export async function POST(req: NextRequest) {
   let event: Stripe.Event;
 
   try {
+    event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET_REFERRAL);
+  } catch (error: any) {
+    return NextResponse.json({ error: `Webhook signature verification failed: ${error.message}` }, { status: 400 });
+  }
+
+  try {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
 
@@ -69,12 +75,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET_REFERRAL);
-  } catch (error: any) {
-    return NextResponse.json({ error: `Webhook signature verification failed: ${error.message}` }, { status: 400 });
-  }
-
-  try {
     if (event.type === "invoice.payment_succeeded") {
       const invoice = event.data.object as Stripe.Invoice;
 
