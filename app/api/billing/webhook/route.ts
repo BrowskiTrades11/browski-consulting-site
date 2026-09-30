@@ -15,6 +15,60 @@ export async function POST(req: NextRequest) {
   let event: Stripe.Event;
 
   try {
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object as Stripe.Checkout.Session;
+
+      // Monthly offer: the Checkout Session is a real $49 payment, not a free trial.
+      // Once paid, create the $199/month subscription with its first invoice exactly
+      // 7 days later. The trial is only an internal billing delay; customers have
+      // already paid $49 for access during these seven days.
+      if (session.mode === "payment" && session.metadata?.plan === "monthly" && session.customer) {
+        const customerId =
+          typeof session.customer === "string" ? session.customer : session.customer.id;
+
+        const paymentIntentId =
+          typeof session.payment_intent === "string"
+            ? session.payment_intent
+            : session.payment_intent?.id;
+
+        if (paymentIntentId) {
+          const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+          const paymentMethodId =
+            typeof paymentIntent.payment_method === "string"
+              ? paymentIntent.payment_method
+              : paymentIntent.payment_method?.id;
+
+          if (paymentMethodId) {
+            const existing = await stripe.subscriptions.list({
+              customer: customerId,
+              status: "all",
+              limit: 20,
+            });
+            const alreadyCreated = existing.data.some(
+              (sub) => sub.metadata?.introCheckoutSessionId === session.id
+            );
+
+            if (!alreadyCreated) {
+              await stripe.subscriptions.create({
+                customer: customerId,
+                items: [{ price: "price_1ULSS71r1QnMfR7T0VZ3IGLH" }],
+                default_payment_method: paymentMethodId,
+                trial_end: Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60,
+                trial_settings: {
+                  end_behavior: { missing_payment_method: "cancel" },
+                },
+                metadata: {
+                  plan: "monthly",
+                  introCheckoutSessionId: session.id,
+                  paidIntro: "49",
+                },
+              });
+            }
+          }
+        }
+      }
+    }
+
     event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET_REFERRAL);
   } catch (error: any) {
     return NextResponse.json({ error: `Webhook signature verification failed: ${error.message}` }, { status: 400 });
