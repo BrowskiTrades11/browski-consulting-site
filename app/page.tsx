@@ -421,12 +421,12 @@ async function loadAdminAccounts() {
 
 function LandingPage({ setPage, onOpenAdmin }: any) {
   const features = [
-    "$499/month or $5,000/year",
+    "$49 for your first 7 days, then $199/month",
     "No profit split",
     "Private member dashboard",
     "Tradeify account activation workflow",
     "Guided onboarding",
-    "50% first-month satisfaction guarantee",
+    "$49 paid 7-day introductory access",
   ];
 
   const dashboardItems = [
@@ -440,7 +440,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
 
   const steps = [
     "Create your Browski Consulting account",
-    "Subscribe to Money Print ORB — monthly or annual plan",
+    "Start Money Print ORB — $49 for 7 days, then $199/month",
     "Submit your Tradeify account for activation review",
     "Receive approval, onboarding, and licensed access",
   ];
@@ -452,15 +452,15 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
     },
     {
       q: "Do you charge a profit split?",
-      a: "No. Browski Consulting uses a flat subscription — $499/month or $5,000/year — with no profit-sharing model.",
+      a: "No. Browski Consulting uses a flat subscription — $49 for your first 7 days, then $199/month — with no profit-sharing model.",
     },
     {
       q: "How does account activation work?",
       a: "After subscribing, you submit your Tradeify account for review. Once approved, your licensed access and onboarding are activated through the member dashboard.",
     },
     {
-      q: "What is the first-month guarantee?",
-      a: "If you are not satisfied during your first 30 days, you can request a 50% refund of your first month, subject to review under the satisfaction guarantee policy.",
+      q: "How does the introductory pricing work?",
+      a: "Your first 7 days are $49. After that introductory period, your subscription automatically renews at $199/month until canceled.",
     },
   ];
 
@@ -538,7 +538,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
                 <div className="pill" style={{ background: "rgba(127,255,0,0.15)", color: ACCENT }}>Browski Consulting</div>
               </div>
               <div className="price">$499</div>
-              <div className="muted">per month — or $5,000/year (2 months free)</div>
+              <div className="muted">per month — or $199/month (2 months free)</div>
               <div style={{ marginTop: 14, marginBottom: 4, background: "rgba(127,255,0,0.08)", border: "1px solid rgba(127,255,0,0.25)", borderRadius: 10, padding: "10px 14px" }}>
                 <p style={{ fontSize: 13, color: "#7fff00", margin: 0, fontWeight: 600 }}>✓ 15-day free trial on monthly plan — no charge until your trial ends</p>
               </div>
@@ -606,7 +606,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
           </p>
 
           <div className="grid-2" style={{ marginTop: 26 }}>
-            <div className="card-tight">$499/month or $5,000/year</div>
+            <div className="card-tight">$49 for your first 7 days, then $199/month</div>
             <div className="card-tight">No profit split</div>
             <div className="card-tight">Private dashboard access</div>
             <div className="card-tight">Tradeify account activation review</div>
@@ -616,7 +616,7 @@ function LandingPage({ setPage, onOpenAdmin }: any) {
         <div className="cta-box">
           <div style={{ fontSize: 14, color: ACCENT }}>Subscription price</div>
           <div className="price" style={{ marginTop: 10 }}>$499</div>
-          <div className="muted">billed monthly — or $5,000/year</div>
+          <div className="muted">billed monthly — or $199/month</div>
           <div style={{ fontSize: 12, color: "#7fff00", marginTop: 4 }}>Annual plan saves $988 (2 months free)</div>
 
           <button
@@ -1350,7 +1350,7 @@ function DashboardPage({ user, dashboardState, referralInfo, onBack, onTradeifyS
               <p>To the fullest extent permitted by applicable law, Browski Consulting, its owner Trenton Dombrowski, affiliates, and partners shall not be liable for any direct, indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, loss of capital, or loss of data, arising from your use of the Money Print ORB system or reliance on any information provided.</p>
 
               <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>5. Subscription Terms</h3>
-              <p>The Money Print ORB subscription is available as a monthly plan ($499/month) or an annual plan ($5,000/year). Subscriptions renew automatically unless cancelled. You may request cancellation at any time through your member dashboard. A 50% refund of your first month's payment may be requested within 30 days of your initial subscription under the satisfaction guarantee, subject to review. No refunds are issued after 30 days.</p>
+              <p>The Money Print ORB subscription is available as a monthly plan ($199/month) or an annual plan ($199/month). Subscriptions renew automatically unless cancelled. You may request cancellation at any time through your member dashboard. A 50% refund of your first month's payment may be requested within 30 days of your initial subscription under the satisfaction guarantee, subject to review. No refunds are issued after 30 days.</p>
 
               <h3 style={{ color: "#fff", marginTop: 24, marginBottom: 8 }}>6. Account Activation</h3>
               <p>Access to the Money Print ORB bot is contingent upon approval of your Tradeify account by Browski Consulting. Browski Consulting reserves the right to deny or revoke access at its sole discretion, including in cases of misuse, violation of these terms, or fraudulent activity.</p>
