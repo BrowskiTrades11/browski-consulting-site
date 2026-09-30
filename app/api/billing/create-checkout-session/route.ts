@@ -94,6 +94,16 @@ export async function POST(req: NextRequest) {
       ...(discounts.length > 0 ? { discounts } : {}),
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/?checkout=success&go=dashboard`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/?checkout=canceled`,
+      ...(plan === "monthly"
+        ? {
+            custom_text: {
+              submit: {
+                message:
+                  "By paying $49 today, you authorize Browski Consulting to automatically charge $199 after 7 days and $199/month thereafter until canceled.",
+              },
+            },
+          }
+        : {}),
       metadata: {
         userId: user.id,
         botType: "MONEY_PRINT_ORB",
