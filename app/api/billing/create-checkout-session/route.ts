@@ -57,21 +57,39 @@ export async function POST(req: NextRequest) {
       discounts.push({ coupon: REFERRAL_COUPON_ID });
     }
 
+    // Reuse or create a Stripe Customer so the payment method collected for
+    // the $49 purchase can be saved and used for the $199/month subscription.
+    const existingCustomers = await stripe.customers.list({ email: user.email, limit: 1 });
+    const customer =
+      existingCustomers.data[0] ||
+      (await stripe.customers.create({
+        email: user.email,
+        metadata: { userId: user.id },
+      }));
+
     const session = await stripe.checkout.sessions.create({
-      mode: "subscription",
-      customer_email: user.email,
+      mode: plan === "monthly" ? "payment" : "subscription",
+      customer: customer.id,
       // allow_promotion_codes and discounts are mutually exclusive for Stripe — only send one
       ...(wasReferred ? {} : { allow_promotion_codes: true }),
-      subscription_data: {
-        metadata: {
-          plan,
-          introFeePaid: plan === "monthly" ? "49" : "",
-        },
-      },
+      ...(plan === "monthly"
+        ? {
+            payment_intent_data: {
+              setup_future_usage: "off_session" as const,
+              metadata: {
+                userId: user.id,
+                plan: "monthly",
+                monthlyRenewalPriceId,
+              },
+            },
+          }
+        : {
+            subscription_data: {
+              metadata: { plan: "annual" },
+            },
+          }),
       line_items: plan === "monthly"
-        ? [
-            { price: introFeePriceId, quantity: 1 },
-          ]
+        ? [{ price: introFeePriceId, quantity: 1 }]
         : [{ price: priceId, quantity: 1 }],
       ...(discounts.length > 0 ? { discounts } : {}),
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/?checkout=success&go=dashboard`,
